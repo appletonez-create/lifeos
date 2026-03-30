@@ -143,6 +143,161 @@ function Slider({ label, value, min, max, step, onChange, suffix, note }) {
   );
 }
 
+// ── Futures Simulator ──
+function FuturesSimulator() {
+  const [startCapital, setStartCapital] = useState(50); // 만원
+  const [dailyRate, setDailyRate] = useState(2); // %
+  const [simYears, setSimYears] = useState(3);
+  const [tick, setTick] = useState(0);
+
+  const TRADING_DAYS = 250;
+
+  const dreamResult = useMemo(() => {
+    const days = TRADING_DAYS * simYears;
+    return startCapital * Math.pow(1 + dailyRate / 100, days);
+  }, [startCapital, dailyRate, simYears]);
+
+  const realityResult = useMemo(() => {
+    const days = TRADING_DAYS * simYears;
+    const results = [];
+    for (let sim = 0; sim < 100; sim++) {
+      let cap = startCapital;
+      for (let d = 0; d < days && cap > 0; d++) {
+        cap *= Math.random() < 0.5 ? (1 + dailyRate / 100) : (1 - (dailyRate / 100) * 1.2);
+        if ((d + 1) % 22 === 0) cap *= (1 - (0.15 + Math.random() * 0.15));
+        if ((d + 1) % 63 === 0 && Math.random() < 0.3) cap *= (1 - (0.5 + Math.random() * 0.3));
+        if (cap < 0) cap = 0;
+      }
+      results.push(Math.max(0, cap));
+    }
+    results.sort((a, b) => a - b);
+    const median = results[49];
+    const billionCount = results.filter(r => r >= 10000).length; // 10억 = 10000만원
+    return { median, billionCount };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [startCapital, dailyRate, simYears, tick]);
+
+  function fHuge(n) {
+    if (n >= 100000000) return `${(n / 100000000).toFixed(0)}조원`;
+    if (n >= 10000) return `${(n / 10000).toFixed(1)}억원`;
+    if (n >= 1) return `${Math.round(n).toLocaleString()}만원`;
+    return "0원";
+  }
+
+  const startStr = `${startCapital}만원`;
+  const goldGrad = "linear-gradient(135deg, #b8860b, #ffd700, #daa520)";
+
+  return (
+    <div style={{ marginTop: 24 }}>
+      <div style={{ background: "#0e0e0e", borderRadius: 16, padding: "28px", border: `1px solid ${C.danger}`, boxShadow: "0 4px 24px rgba(185,68,68,0.15)" }}>
+        {/* Title */}
+        <div style={{ textAlign: "center", marginBottom: 24 }}>
+          <div style={{ fontSize: 17, fontWeight: 700, color: "#fff", marginBottom: 4 }}>🎰 신기루 시뮬레이터</div>
+          <div style={{ fontSize: 12, color: "#888", letterSpacing: 1 }}>선물로 10억을 벌 수 있을까?</div>
+        </div>
+
+        {/* Sliders */}
+        <div style={{ background: "rgba(255,255,255,0.04)", borderRadius: 12, padding: "20px", marginBottom: 20 }}>
+          {[
+            { label: "시작 자금", value: startCapital, min: 50, max: 1000, step: 50, suffix: "만원", onChange: setStartCapital },
+            { label: "일 평균 수익률", value: dailyRate, min: 1, max: 5, step: 0.5, suffix: "%", onChange: setDailyRate },
+            { label: "기간", value: simYears, min: 1, max: 10, step: 1, suffix: "년", onChange: setSimYears },
+          ].map(({ label, value, min, max, step, suffix, onChange }) => (
+            <div key={label} style={{ marginBottom: 16 }}>
+              <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 6 }}>
+                <span style={{ fontSize: 13, color: "#bbb" }}>{label}</span>
+                <span style={{ fontSize: 16, fontWeight: 700, color: "#ffd700" }}>{value}{suffix}</span>
+              </div>
+              <input type="range" min={min} max={max} step={step} value={value}
+                onChange={e => onChange(Number(e.target.value))}
+                style={{ width: "100%", accentColor: "#ffd700" }} />
+              <div style={{ display: "flex", justifyContent: "space-between", fontSize: 11, color: "#555" }}>
+                <span>{min}{suffix}</span><span>{max}{suffix}</span>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Two Scenarios */}
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 16 }}>
+          {/* Dream */}
+          <div style={{ background: "linear-gradient(145deg, #1a1400, #221c00)", border: "1px solid #7a5c00", borderRadius: 12, padding: "20px 14px", textAlign: "center" }}>
+            <div style={{ fontSize: 10, letterSpacing: 3, color: "#b8860b", marginBottom: 10, fontWeight: 700 }}>꿈의 시나리오</div>
+            <div style={{ fontSize: 11, color: "#777", marginBottom: 16, lineHeight: 1.6 }}>매일 복리<br />(연 250 거래일)</div>
+            <div style={{ fontSize: 12, color: "#888", marginBottom: 4 }}>{startStr}</div>
+            <div style={{ fontSize: 12, color: "#555", marginBottom: 8 }}>↓ {simYears}년 후</div>
+            <div style={{
+              fontSize: dreamResult > 1e8 ? 18 : 22,
+              fontWeight: 700,
+              background: goldGrad,
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+              lineHeight: 1.3,
+            }}>
+              {fHuge(dreamResult)}
+            </div>
+          </div>
+
+          {/* Reality */}
+          <div style={{ background: "linear-gradient(145deg, #180000, #200404)", border: `1px solid #6b1a1a`, borderRadius: 12, padding: "20px 14px", textAlign: "center" }}>
+            <div style={{ fontSize: 10, letterSpacing: 3, color: C.danger, marginBottom: 10, fontWeight: 700 }}>현실 시나리오</div>
+            <div style={{ fontSize: 11, color: "#777", marginBottom: 16, lineHeight: 1.6 }}>100회 몬테카를로<br />중간값(median)</div>
+            <div style={{ fontSize: 12, color: "#888", marginBottom: 4 }}>{startStr}</div>
+            <div style={{ fontSize: 12, color: "#555", marginBottom: 8 }}>↓ {simYears}년 후</div>
+            <div style={{ fontSize: 22, fontWeight: 700, color: C.danger, lineHeight: 1.3, marginBottom: 10 }}>
+              {realityResult.median < 1 ? "0원" : fHuge(realityResult.median)}
+            </div>
+            <div style={{ fontSize: 11, color: "#a04444", background: "rgba(185,68,68,0.1)", borderRadius: 6, padding: "6px 8px" }}>
+              100번 중 10억 달성: <strong style={{ color: C.danger }}>{realityResult.billionCount}회</strong>
+            </div>
+          </div>
+        </div>
+
+        {/* Summary */}
+        <div style={{ background: "rgba(255,255,255,0.03)", borderRadius: 10, padding: "18px 20px", marginBottom: 16 }}>
+          <div style={{ display: "flex", justifyContent: "space-around", marginBottom: 16, flexWrap: "wrap", gap: 10 }}>
+            <div style={{ textAlign: "center" }}>
+              <div style={{ fontSize: 10, color: "#666", marginBottom: 4 }}>꿈</div>
+              <div style={{ fontSize: 13, color: "#ffd700", fontWeight: 700 }}>{startStr} → {fHuge(dreamResult)}</div>
+            </div>
+            <div style={{ textAlign: "center" }}>
+              <div style={{ fontSize: 10, color: "#666", marginBottom: 4 }}>현실</div>
+              <div style={{ fontSize: 13, color: C.danger, fontWeight: 700 }}>{startStr} → {realityResult.median < 1 ? "0원" : fHuge(realityResult.median)}</div>
+              <div style={{ fontSize: 11, color: "#777" }}>(100번 중 {100 - realityResult.billionCount}번은 이쪽)</div>
+            </div>
+          </div>
+          <div style={{ borderTop: "1px solid rgba(255,255,255,0.06)", paddingTop: 14, fontSize: 13, lineHeight: 2, color: "#bbb", textAlign: "center" }}>
+            <strong style={{ color: "#fff" }}>이것이 닿을 듯 아닐 듯의 정체다.</strong><br />
+            꿈의 숫자는 수학적으로 맞다.<br />
+            하지만 <strong style={{ color: C.danger }}>단 한 번의 청산이 전부를 지운다.</strong>
+          </div>
+        </div>
+
+        {/* Re-simulate button */}
+        <div style={{ textAlign: "center", marginBottom: 20 }}>
+          <button onClick={() => setTick(t => t + 1)} style={{
+            padding: "8px 28px", background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.12)",
+            borderRadius: 20, color: "#aaa", fontSize: 13, cursor: "pointer", fontFamily: "inherit",
+            transition: "all 0.2s",
+          }}>🔄 재시뮬레이션</button>
+        </div>
+
+        {/* Personal record */}
+        <div style={{ background: "rgba(185,68,68,0.08)", border: "1px solid rgba(185,68,68,0.25)", borderRadius: 12, padding: "20px" }}>
+          <div style={{ fontSize: 10, letterSpacing: 3, color: C.danger, fontWeight: 700, marginBottom: 12 }}>나의 실제 기록</div>
+          <div style={{ fontSize: 14, color: "#ccc", lineHeight: 2.1 }}>
+            6년간 매매 → 퇴직금 전액 소실 + 대출 5억<br />
+            1000만원 → 1억8천 달성 → <strong style={{ color: C.danger }}>전액 청산</strong>
+          </div>
+          <div style={{ marginTop: 12, fontSize: 13, color: "#888", fontStyle: "italic" }}>
+            나는 이 시뮬레이션의 '현실' 쪽에 있었다.
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 // ── Main ──
 export default function LifeOS() {
   const [tab, setTab] = useState("overview");
@@ -253,6 +408,7 @@ export default function LifeOS() {
                   ].map((t, i) => <li key={i} style={{ marginBottom: 8, lineHeight: 1.7 }}>{t}</li>)}
                 </ol>
               </div>
+              <FuturesSimulator />
             </Section>
 
             {/* Business Path */}
