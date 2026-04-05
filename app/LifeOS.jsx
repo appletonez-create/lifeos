@@ -41,6 +41,7 @@ const SECTIONS_DATA = {
     { n: 8, t: "고통을 미화하지 않는다.", s: "반복되는 소모는 낭만이 아니라 교정 대상이다." },
     { n: 9, t: "'의미 도파민'도 도파민이다.", s: "방향을 찾았다는 흥분도 중독의 변형이 될 수 있다." },
     { n: 10, t: "분석은 충분하다. 이제 필요한 건 실행이다.", s: "원칙이 행동이 되는 건 날짜가 붙었을 때다." },
+    { n: 11, t: "크게 믿되, 작게 증명한다.", s: "꿈은 북극성이다. 매일의 기준은 '오늘 하나를 검증했는가'이다. 시대를 바꾸겠다는 야망이 매일의 조급함이 되면, 그건 선물판과 같은 구조다." },
   ],
   sentences: [
     "거대한 방향성은 유지하되, 일상의 행복을 죄책감 없이 누릴 수 있는 사람.",
@@ -54,6 +55,9 @@ const SECTIONS_DATA = {
     "나는 벌어도 청산당할 사람이다. 그것을 아는 것이 나의 힘이다.",
     "느린 길이 실제로는 빠른 길이었다.",
     "난 다 이룬다. 그것이 나를 위한 게 아니라 우리를 위해.",
+    "작은 것들의 신. 작게 작게 하나씩 위닝해나간다.",
+    "크게 믿되, 작게 증명한다.",
+    "끝난 건 지옥이다. 나는 시작이다.",
   ],
 };
 
@@ -145,8 +149,8 @@ function Slider({ label, value, min, max, step, onChange, suffix, note }) {
 
 // ── Futures Simulator ──
 function FuturesSimulator() {
-  const [startCapital, setStartCapital] = useState(50); // 만원
-  const [dailyRate, setDailyRate] = useState(2); // %
+  const [startCapital, setStartCapital] = useState(50);
+  const [dailyRate, setDailyRate] = useState(2);
   const [simYears, setSimYears] = useState(3);
   const [tick, setTick] = useState(0);
 
@@ -172,7 +176,7 @@ function FuturesSimulator() {
     }
     results.sort((a, b) => a - b);
     const median = results[49];
-    const billionCount = results.filter(r => r >= 10000).length; // 10억 = 10000만원
+    const billionCount = results.filter(r => r >= 10000).length;
     return { median, billionCount };
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [startCapital, dailyRate, simYears, tick]);
@@ -190,13 +194,11 @@ function FuturesSimulator() {
   return (
     <div style={{ marginTop: 24 }}>
       <div style={{ background: "#0e0e0e", borderRadius: 16, padding: "28px", border: `1px solid ${C.danger}`, boxShadow: "0 4px 24px rgba(185,68,68,0.15)" }}>
-        {/* Title */}
         <div style={{ textAlign: "center", marginBottom: 24 }}>
           <div style={{ fontSize: 17, fontWeight: 700, color: "#fff", marginBottom: 4 }}>🎰 신기루 시뮬레이터</div>
           <div style={{ fontSize: 12, color: "#888", letterSpacing: 1 }}>선물로 10억을 벌 수 있을까?</div>
         </div>
 
-        {/* Sliders */}
         <div style={{ background: "rgba(255,255,255,0.04)", borderRadius: 12, padding: "20px", marginBottom: 20 }}>
           {[
             { label: "시작 자금", value: startCapital, min: 50, max: 1000, step: 50, suffix: "만원", onChange: setStartCapital },
@@ -218,9 +220,7 @@ function FuturesSimulator() {
           ))}
         </div>
 
-        {/* Two Scenarios */}
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 16 }}>
-          {/* Dream */}
           <div style={{ background: "linear-gradient(145deg, #1a1400, #221c00)", border: "1px solid #7a5c00", borderRadius: 12, padding: "20px 14px", textAlign: "center" }}>
             <div style={{ fontSize: 10, letterSpacing: 3, color: "#b8860b", marginBottom: 10, fontWeight: 700 }}>꿈의 시나리오</div>
             <div style={{ fontSize: 11, color: "#777", marginBottom: 16, lineHeight: 1.6 }}>매일 복리<br />(연 250 거래일)</div>
@@ -238,7 +238,6 @@ function FuturesSimulator() {
             </div>
           </div>
 
-          {/* Reality */}
           <div style={{ background: "linear-gradient(145deg, #180000, #200404)", border: `1px solid #6b1a1a`, borderRadius: 12, padding: "20px 14px", textAlign: "center" }}>
             <div style={{ fontSize: 10, letterSpacing: 3, color: C.danger, marginBottom: 10, fontWeight: 700 }}>현실 시나리오</div>
             <div style={{ fontSize: 11, color: "#777", marginBottom: 16, lineHeight: 1.6 }}>100회 몬테카를로<br />중간값(median)</div>
@@ -253,7 +252,6 @@ function FuturesSimulator() {
           </div>
         </div>
 
-        {/* Summary */}
         <div style={{ background: "rgba(255,255,255,0.03)", borderRadius: 10, padding: "18px 20px", marginBottom: 16 }}>
           <div style={{ display: "flex", justifyContent: "space-around", marginBottom: 16, flexWrap: "wrap", gap: 10 }}>
             <div style={{ textAlign: "center" }}>
@@ -273,7 +271,6 @@ function FuturesSimulator() {
           </div>
         </div>
 
-        {/* Re-simulate button */}
         <div style={{ textAlign: "center", marginBottom: 20 }}>
           <button onClick={() => setTick(t => t + 1)} style={{
             padding: "8px 28px", background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.12)",
@@ -282,7 +279,6 @@ function FuturesSimulator() {
           }}>🔄 재시뮬레이션</button>
         </div>
 
-        {/* Personal record */}
         <div style={{ background: "rgba(185,68,68,0.08)", border: "1px solid rgba(185,68,68,0.25)", borderRadius: 12, padding: "20px" }}>
           <div style={{ fontSize: 10, letterSpacing: 3, color: C.danger, fontWeight: 700, marginBottom: 12 }}>나의 실제 기록</div>
           <div style={{ fontSize: 14, color: "#ccc", lineHeight: 2.1 }}>
@@ -318,6 +314,8 @@ export default function LifeOS() {
     { id: "overview", label: "인생 OS" },
     { id: "debt", label: "부채 현황" },
     { id: "invest", label: "딸의 펀드" },
+    { id: "deepdive", label: "1년 딥다이브" },
+    { id: "action", label: "즉시 실행" },
   ];
 
   return (
@@ -325,13 +323,13 @@ export default function LifeOS() {
       <div style={s.container}>
         {/* ── Header ── */}
         <div style={{ textAlign: "center", marginBottom: 32 }}>
-          <div style={{ fontSize: 11, letterSpacing: 6, color: C.accent, textTransform: "uppercase", marginBottom: 8 }}>Life Operating System v3</div>
+          <div style={{ fontSize: 11, letterSpacing: 6, color: C.accent, textTransform: "uppercase", marginBottom: 8 }}>Life Operating System v4</div>
           <h1 style={{ fontSize: 32, fontWeight: 700, margin: "0 0 8px", background: `linear-gradient(135deg, ${C.text}, ${C.accent})`, WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>내 인생의 운영체제</h1>
           <div style={{ fontSize: 13, color: C.dim }}>1988년생 · 39세 · 2026년 봄, 이곳에서 나왔다</div>
         </div>
 
         {/* ── Core Quote ── */}
-        <div style={{ padding: "28px", background: C.accentSoft, borderLeft: `3px solid ${C.accent}`, borderRadius: "0 10px 10px 0", marginBottom: 32, fontSize: 17, lineHeight: 2, color: C.text }}>
+        <div style={{ padding: "28px", background: C.accentSoft, borderLeft: `3px solid ${C.accent}`, borderRadius: "0 10px 10px 0", marginBottom: 16, fontSize: 17, lineHeight: 2, color: C.text }}>
           난 감정을 오롯이 느끼고 그것에 오롯이 공감하고<br />
           만물을 사랑하고 취하기도 매혹적이기도<br />
           바람에 공기에 감사함을 느끼기도 하는<br />
@@ -339,14 +337,21 @@ export default function LifeOS() {
           <strong>그것이 나의 전부다.</strong>
         </div>
 
+        {/* ── Second Quote ── */}
+        <div style={{ padding: "28px", background: C.accentSoft, borderLeft: `3px solid ${C.accent}`, borderRadius: "0 10px 10px 0", marginBottom: 32, fontSize: 20, lineHeight: 2, color: C.text, fontWeight: 700 }}>
+          작은 것들의 신.<br />
+          작게 작게 하나씩 위닝해나간다.<br />
+          그게 그냥 전부다.
+        </div>
+
         {/* ── Tab Nav ── */}
-        <div style={{ display: "flex", gap: 8, marginBottom: 32, borderBottom: `1px solid ${C.border}`, paddingBottom: 0 }}>
+        <div style={{ display: "flex", gap: 4, marginBottom: 32, borderBottom: `1px solid ${C.border}`, overflowX: "auto", WebkitOverflowScrolling: "touch", paddingBottom: 0 }}>
           {tabs.map(t => (
             <button key={t.id} onClick={() => setTab(t.id)} style={{
-              padding: "10px 20px", fontSize: 14, fontWeight: tab === t.id ? 700 : 400,
+              padding: "10px 16px", fontSize: 14, fontWeight: tab === t.id ? 700 : 400,
               color: tab === t.id ? C.accent : C.dim, background: "none", border: "none",
               borderBottom: tab === t.id ? `2px solid ${C.accent}` : "2px solid transparent",
-              cursor: "pointer", fontFamily: "inherit", transition: "all 0.2s",
+              cursor: "pointer", fontFamily: "inherit", transition: "all 0.2s", whiteSpace: "nowrap", flexShrink: 0,
             }}>{t.label}</button>
           ))}
         </div>
@@ -360,7 +365,8 @@ export default function LifeOS() {
             <div style={{ textAlign: "center", padding: "40px 28px", background: C.surface, border: `1px solid ${C.border}`, borderRadius: 16, marginBottom: 40, boxShadow: "0 2px 8px rgba(0,0,0,0.03)" }}>
               <div style={{ fontSize: 11, letterSpacing: 5, color: C.accent, textTransform: "uppercase", marginBottom: 12 }}>★ 북극성 — 매일 쳐다보지 않는다. 방향만 확인한다</div>
               <h2 style={{ fontSize: 22, fontWeight: 700, marginBottom: 12 }}>시간의 자유, 경제의 구속에서의 해방,<br />가족과 오롯이 함께하는 삶</h2>
-              <p style={{ fontSize: 14, color: C.dim, maxWidth: 500, margin: "0 auto", lineHeight: 1.8 }}>나인원한남은 이 무형의 가치를 유형화한 상징이다. 매일 쳐다보면 현재가 초라해지고, "빠르게"를 찾게 되고, 그게 선물판이었다.</p>
+              <p style={{ fontSize: 14, color: C.dim, maxWidth: 500, margin: "0 auto 16px", lineHeight: 1.8 }}>나인원한남은 이 무형의 가치를 유형화한 상징이다. 매일 쳐다보면 현재가 초라해지고, "빠르게"를 찾게 되고, 그게 선물판이었다.</p>
+              <p style={{ fontSize: 14, color: C.mid, maxWidth: 520, margin: "0 auto", lineHeight: 1.9 }}>나의 꿈은 부자가 되는 것이 아니다. 인간이 자기 도파민을 컨트롤해서 자기주도적으로 살 수 있게 돕는 것이다. 그리고 그 과정에서 나 자신이 가장 충만하게 사는 것이다. 부는 그 결과로 따라오는 것이지 출발점이 아니다.</p>
             </div>
 
             {/* Who Am I */}
@@ -374,6 +380,16 @@ export default function LifeOS() {
               <Card label="고유 자산" title="6년간 진짜 쌓은 것">
                 <p style={s.p}>돈은 다 날렸다. 하지만 인간 심리의 극한을 몸으로 아는 데이터는 안 날아갔다. 이 경험 + 토스 임원 직속. <strong>이 조합을 가진 사람은 드물다.</strong></p>
               </Card>
+              <div style={{ ...s.card, borderColor: C.accent, background: C.accentSoft }}>
+                <div style={{ ...s.label, color: C.accent }}>변곡점</div>
+                <h3 style={s.h3}>나의 세계가 끝났다 — 2026년 3월</h3>
+                <p style={s.p}>아팠다. 허리도 다리저림도 두통도 열도. 원인은 하나로 뚜렷하지 않았다. 그러나 난 알았다. 지금이 바로 그 변곡이구나. 선물의 악마가 나간다. 난 더이상 매매를 할 힘이 없다. 꺾였다는 것이 맞다. 나의 힘은 회사의 수익과 부수수익으로 쏠린다. 끝난 건 지옥이다. 나는 시작이다.</p>
+              </div>
+              <div style={{ ...s.card, borderColor: C.purple, background: C.purpleSoft }}>
+                <div style={{ ...s.label, color: C.purple }}>나의 꿈</div>
+                <h3 style={s.h3}>도파민에 파괴당하는 사람들을 구하는 것</h3>
+                <p style={s.p}>6년간 선물판에서 1000만원을 1억8천으로 만들었다가 전부 잃고, 퇴직금을 날리고, 대출 5억을 만들었다. 감성이 메말랐고, 가족 앞에서 떳떳하지 못했다. 그런데 살아서 나왔다. 너처럼 도파민에 갉아먹히고 있는 사람들이 자기 파괴 직전에 멈출 수 있게 하는 시스템을 만드는 것. 선물 매매 중독자, 충동 쇼핑에 카드값이 감당 안 되는 사람, 새벽 3시에 배달앱을 열고 있는 사람, 인스타를 3시간째 스크롤하면서 자기혐오에 빠진 사람. 파괴적 도파민을 건설적 도파민으로 리다이렉션하는 AI 에이전트. 그리고 그 시스템의 첫 번째 유저이자 첫 번째 증거가 바로 나다.</p>
+              </div>
             </Section>
 
             {/* Three Questions */}
@@ -393,7 +409,7 @@ export default function LifeOS() {
             {/* Closed Game */}
             <Section num="03" title="선물 — 끝난 게임" sub="실력이 있기 때문에 더 위험하다. 50만원도 하지 않는다.">
               <div style={{ background: C.dangerSoft, border: `1px solid ${C.danger}`, borderRadius: 12, padding: "16px 20px", textAlign: "center", marginBottom: 16, fontSize: 14, color: C.danger, fontWeight: 700 }}>
-                ⛔ 선물 · 코인 선물 · 레버리지 ETF · 마진 거래 — 금액 불문 전면 금지
+                ⛔ 선물 · 코인 선물 · 레버리지 ETF · 마진 거래 — 금액 불문 전면 금지. 50만원도 하지 않는다. 끝났다.
               </div>
               <div style={{ background: C.dangerSoft, border: `1px solid ${C.danger}`, borderRadius: 12, padding: "28px", marginBottom: 16 }}>
                 <h3 style={{ color: C.danger, fontSize: 16, fontWeight: 700, marginBottom: 14 }}>🚨 차트가 보고 싶어질 때의 프로토콜</h3>
@@ -419,7 +435,7 @@ export default function LifeOS() {
             </Section>
 
             {/* Principles */}
-            <Section num="05" title="운영 원칙 10조" sub="서사는 크게, 운영은 촘촘하게">
+            <Section num="05" title="운영 원칙 11조" sub="서사는 크게, 운영은 촘촘하게">
               {SECTIONS_DATA.principles.map(p => (
                 <div key={p.n} style={{ display: "flex", gap: 14, alignItems: "baseline", padding: "16px 20px", background: C.surface, borderRadius: 10, border: `1px solid ${C.border}`, marginBottom: 10 }}>
                   <span style={{ fontSize: 20, color: C.accent, fontWeight: 700, width: 28, flexShrink: 0, fontFamily: "'Playfair Display', serif" }}>{p.n}</span>
@@ -443,10 +459,14 @@ export default function LifeOS() {
                 나는 빨리 부자가 되어야 하는 사람이 아니다.<br />
                 자기파괴의 루프를 끝내고<br />
                 그것을 구조와 제품으로 번역해야 하는 사람이다.<br /><br />
+                나의 꿈은 도파민에 파괴당하는 사람들을 구하는 것이다.<br />
+                그리고 집에 돌아와서 딸이 그린 그림을 보면서 충만해하는 것이다.<br />
+                나는 이 시스템의 첫 번째 유저이자, 첫 번째 증거다.<br /><br />
                 <strong>난 다 이룬다.<br />그것이 나를 위한 게 아니라 우리를 위해.</strong>
               </p>
               <div style={{ marginTop: 32, fontSize: 13, color: C.dim }}>
-                2026년 3월 29일 봄 · 카페에서 · 딸과 아내 곁에서<br />이곳에서 나왔다
+                2026년 3월 29일 봄 · 카페에서 · 딸과 아내 곁에서<br />이곳에서 나왔다<br /><br />
+                <strong style={{ color: C.accent }}>작은 것들의 신 · Life OS v4</strong>
               </div>
             </div>
           </>
@@ -457,7 +477,6 @@ export default function LifeOS() {
         {/* ═══════════════════════════════════════ */}
         {tab === "debt" && (
           <>
-            {/* Asset Summary */}
             <Section num="" title="자산·부채 현황" sub="숫자로 펼치면 공포가 관리가 된다">
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 12, marginBottom: 24 }}>
                 {[
@@ -480,7 +499,6 @@ export default function LifeOS() {
               </Card>
             </Section>
 
-            {/* Detailed Loan Table */}
             <Section num="" title="신용대출 상세 현황" sub="금리 · 만기 · 납입일 · 월 이자 전체 정리">
               <Card>
                 <div style={{ overflowX: "auto" }}>
@@ -493,7 +511,7 @@ export default function LifeOS() {
                       </tr>
                     </thead>
                     <tbody>
-                      {creditLoans.sort((a, b) => b.rate - a.rate).map((l, i) => {
+                      {creditLoans.sort((a, b) => b.rate - a.rate).map((l) => {
                         const isUrgent = l.maturity && l.maturity.startsWith("2026");
                         const isHighRate = l.rate >= 7;
                         return (
@@ -523,7 +541,6 @@ export default function LifeOS() {
                 </div>
               </Card>
 
-              {/* Mortgage */}
               <Card label="주담대" labelColor={C.dim}>
                 <div style={{ display: "flex", justifyContent: "space-between", flexWrap: "wrap", gap: 8 }}>
                   {[
@@ -542,7 +559,6 @@ export default function LifeOS() {
               </Card>
             </Section>
 
-            {/* Monthly Cash Flow */}
             <Section num="" title="월간 현금 흐름" sub="매달 얼마가 나가고, 얼마가 남는지">
               {(() => {
                 const creditInterest = creditLoans.reduce((s, l) => s + l.monthly, 0);
@@ -580,7 +596,6 @@ export default function LifeOS() {
               })()}
             </Section>
 
-            {/* Urgency Alert */}
             <Section num="" title="⚠️ 만기 임박 대출" sub="2026년 내 만기 도래 — 연장 또는 상환 계획 필요">
               <div style={{ background: C.dangerSoft, border: `1px solid ${C.danger}`, borderRadius: 12, padding: 24, marginBottom: 16 }}>
                 {creditLoans.filter(l => l.maturity && l.maturity.startsWith("2026")).sort((a, b) => a.maturity.localeCompare(b.maturity)).map(l => (
@@ -600,7 +615,6 @@ export default function LifeOS() {
               </div>
             </Section>
 
-            {/* Snowball Strategy */}
             <Section num="" title="스노우볼 상환 전략" sub="작은 것부터 죽여나간다. 건수가 줄면 심리가 바뀐다.">
               {[
                 { phase: "1단계", time: "즉시 ~ 3개월", color: C.green, bg: C.greenSoft,
@@ -637,7 +651,6 @@ export default function LifeOS() {
           <>
             <Section num="" title="Plan B — 딸을 위한 투자" sub="자동이체 · 차트 안 봄 · 판단 불필요 · 2028년 시작">
 
-              {/* Why Index */}
               <Card label="왜 인덱스인가" labelColor={C.green} title="다른 선택지를 배제하는 이유">
                 {REJECT_REASONS.map((r, i) => (
                   <div key={i} style={{ display: "flex", gap: 10, padding: "8px 0", borderBottom: i < REJECT_REASONS.length - 1 ? `1px solid ${C.surface2}` : "none" }}>
@@ -651,7 +664,6 @@ export default function LifeOS() {
                 </div>
               </Card>
 
-              {/* Simulator Controls */}
               <Card label="시뮬레이터" labelColor={C.accent} title="슬라이더를 움직여봐">
                 <Slider label="월 투자금" value={monthly} min={30} max={200} step={10} onChange={setMonthly} suffix="만원" />
                 <Slider label="투자 기간" value={years} min={10} max={30} step={1} onChange={setYears} suffix="년" />
@@ -659,12 +671,10 @@ export default function LifeOS() {
                   note={esc > 0 ? `소득 증가에 따라 매년 ${esc}%씩 증가 → ${years}년차 월 ${Math.round(monthly * Math.pow(1 + esc / 100, years - 1))}만원` : "고정 투자금"} />
               </Card>
 
-              {/* Target */}
               <div style={{ textAlign: "center", padding: 14, background: C.greenSoft, borderRadius: 10, border: `1px solid rgba(61,122,80,0.2)`, marginBottom: 20 }}>
                 <span style={{ fontSize: 14, color: C.green, fontWeight: 700 }}>🎯 목표: 10억원 — 딸에게 주는 아빠의 선물</span>
               </div>
 
-              {/* Results */}
               {investResults.map(r => {
                 const reached = r.final >= 100000;
                 const pct = Math.min(100, (r.final / 100000) * 100);
@@ -697,7 +707,6 @@ export default function LifeOS() {
                 );
               })}
 
-              {/* Recommendation */}
               <div style={{ ...s.card, border: `2px solid ${C.accent}`, marginTop: 8 }}>
                 <div style={{ ...s.label, color: C.accent }}>추천 플랜</div>
                 <h3 style={s.h3}>QQQ 70% + VOO 30% · 자동이체 · 연 1회 리밸런싱</h3>
@@ -707,7 +716,6 @@ export default function LifeOS() {
                 </p>
               </div>
 
-              {/* Conditions */}
               <div style={{ background: C.dangerSoft, border: `1px solid rgba(185,68,68,0.2)`, borderRadius: 12, padding: 24, marginTop: 16 }}>
                 <div style={{ fontSize: 13, fontWeight: 700, color: C.danger, marginBottom: 8 }}>⚠️ 시작 조건 — 전부 충족 전에는 시작하지 않는다</div>
                 <p style={{ ...s.p, fontSize: 13, color: C.mid }}>
@@ -723,6 +731,246 @@ export default function LifeOS() {
             <p style={{ fontSize: 11, color: C.muted, textAlign: "center", lineHeight: 1.7 }}>
               과거 수익률은 미래를 보장하지 않습니다. 복리 계산 기반 추정치이며 실제 수익률은 시장 상황에 따라 달라집니다. 투자 결정 전 전문가와 상담하세요.
             </p>
+          </>
+        )}
+
+        {/* ═══════════════════════════════════════ */}
+        {/* TAB: DEEP DIVE */}
+        {/* ═══════════════════════════════════════ */}
+        {tab === "deepdive" && (
+          <>
+            {/* 핵심 선언 */}
+            <div style={{ padding: "36px 28px", background: C.accentSoft, border: `1px solid ${C.accent}`, borderRadius: 16, marginBottom: 40, textAlign: "center" }}>
+              <div style={{ fontSize: 11, letterSpacing: 5, color: C.accent, textTransform: "uppercase", marginBottom: 16 }}>1년 딥다이브 선언</div>
+              <p style={{ fontSize: 18, fontWeight: 700, lineHeight: 2, color: C.text, margin: 0 }}>
+                나는 1년 동안, 토스의 급여를 기반으로<br />
+                '도파민 컨트롤 AI 에이전트'를 집요하게 검증한다.<br />
+                <span style={{ color: C.accent }}>토스 월급은 면죄부가 아니라 실험 자본이다.</span>
+              </p>
+            </div>
+
+            {/* 마인드셋 */}
+            <Section num="01" title="크게 믿되, 작게 증명한다" sub="선물판 사고방식과 실험 사고방식의 차이">
+              <div style={{ ...s.card, borderColor: C.danger, background: C.dangerSoft }}>
+                <div style={{ ...s.label, color: C.danger }}>🔴 도파민 체크</div>
+                <p style={s.p}>'이번에 대박 나면 인생이 바뀐다'고 느끼는 순간 — 그건 도파민이다. 선물판과 같은 구조다. 멈추고 기준 3을 확인하라.</p>
+              </div>
+              <div style={{ ...s.card, borderColor: C.green, background: C.greenSoft }}>
+                <div style={{ ...s.label, color: C.green }}>🟢 실험 체크</div>
+                <p style={s.p}>'오늘 한 명이 써봤는데 반응이 이랬다'에 집중하고 있다면 — 그건 실험이다. 이건 건강하다. 계속 가라.</p>
+              </div>
+              <div style={{ ...s.card, borderColor: C.accent, background: C.accentSoft }}>
+                <div style={{ ...s.label, color: C.accent }}>🟡 믿음의 번역</div>
+                <p style={s.p}>점이 선이 된다는 믿음은 맞다. 선물판에서는 '그러니까 다음 판도 해야 해'로 번역됐다. 사업에서는 '그러니까 이 경험을 제품에 녹이자'로 번역한다. 같은 믿음, 다른 방향.</p>
+              </div>
+              <div style={{ padding: "20px 24px", background: C.surface, border: `1px solid ${C.border}`, borderRadius: 12, textAlign: "center" }}>
+                <p style={{ fontSize: 16, fontWeight: 700, color: C.text, margin: 0, lineHeight: 2 }}>
+                  꿈은 북극성이다.<br />매일의 기준은 '오늘 하나를 검증했는가'이다.
+                </p>
+              </div>
+            </Section>
+
+            {/* Wave OS 비전 */}
+            <Section num="02" title="Wave OS — 도파민 컨트롤 AI 에이전트" sub="왜 이게 사업이 되는가">
+              <Card label="코어 미션" labelColor={C.purple} title="도파민이 나를 파괴하고 있는데, 그걸 보여주고 멈춰주는 AI">
+                <p style={s.p}>매매 중독만이 아니다. 쇼핑 중독, 식탐, 폰 중독, 충동 소비 — 모든 자기파괴적 충동을 셀프컨트롤하게 돕는 AI 에이전트. 단순히 '하지 마'라고 막는 게 아니라, 파괴적 도파민을 건설적 도파민으로 리다이렉션하는 구조. 충동 소비를 멈춘 만큼 레벨이 올라가고, 아낀 돈이 쌓여서 자산이 되는 과정을 가시화한다.</p>
+              </Card>
+              <Card label="경쟁우위" labelColor={C.green} title="토스가 절대 못 하는 영역">
+                <p style={s.p}>토스는 '돈을 편하게 쓰게' 해주는 앱이다. Wave OS는 '돈을 안 쓰게' 막아주는 앱이다. 이해관계가 정반대라 토스도, 카드사도, 쇼핑몰도 절대 못 한다. 그들의 수익모델이 네가 쓰는 것에 의존하니까.</p>
+              </Card>
+              <Card label="타깃" labelColor={C.blue} title="부자가 되고 싶은 수백 수천만의 인구">
+                <p style={s.p}>누구나 부자가 되고 싶은 마음은 큰데, 도파민이 그걸 방해하고 있다. Wave OS는 그 사이의 다리다. '당신은 이번 주 충동 소비를 12만원 줄였고, 그 돈이 1년 뒤 156만원이 된다.' 파괴를 멈추는 것에서 그치지 않고, 멈춘 자리에 성장을 채워넣는다.</p>
+              </Card>
+              <Card label="BM" labelColor={C.accent} title="월 2만원 구독 — 커피 한 잔 값">
+                <p style={s.p}>이 앱이 충동 소비를 월 20만원 줄여주면 2만원은 10배 ROI. 프로 모델 89,000원은 경제 뉴스, 시장 분석, 자산 배분 가이드 포함. 하지만 프로는 나중이다. 지금은 코어만.</p>
+              </Card>
+            </Section>
+
+            {/* Phase 로드맵 */}
+            <Section num="03" title="Phase 로드맵" sub="점진적 검증 — 단계를 건너뛰지 않는다">
+              {[
+                {
+                  num: "0", color: C.danger, bg: C.dangerSoft,
+                  title: "나 자신이 첫 번째 유저",
+                  timeline: "지금 ~ 2개월 · 39세",
+                  desc: "카드앱에서 최근 3개월 이용내역 CSV 다운로드. Claude에 넣어서 충동 소비 패턴 분석. 내 도파민 트리거 맵핑. 내가 갓생을 사는 과정 자체가 제품 개발이다.",
+                  sub: "첫 번째 할 일: 카드앱 열어서 CSV 다운로드. 이것 하나.",
+                },
+                {
+                  num: "1", color: C.accent, bg: C.accentSoft,
+                  title: "첫 세그먼트 검증 — 매매 중독자",
+                  timeline: "3 ~ 6개월 · 40세",
+                  desc: "내가 가장 깊이 아는 영역. 서사가 곧 마케팅: '6년간 5억 날린 사람이 만든 도파민 브레이크.' 선물로 크게 잃어본 사람 20명 인터뷰. 프로토타입 테스트. 행동 데이터 수집.",
+                  sub: "검증: 체크포인트를 실제로 거치는지 / 매매를 실제로 멈추는지 / 다시 오는지",
+                },
+                {
+                  num: "2", color: C.blue, bg: C.blueSoft,
+                  title: "세그먼트 확장 — 충동 소비",
+                  timeline: "6 ~ 12개월 · 40세",
+                  desc: "같은 도파민 컨트롤 엔진으로 쇼핑 중독, 폰 중독, 식탐으로 확장. 코어 로직(트리거 → 개입 → 리다이렉션)은 동일, 트리거 감지만 다르다. 카드 내역 CSV 기반 → 이후 공공마이데이터 API 연동.",
+                  sub: "카드 내역 기반 충동 소비 감지 → 텔레그램 알림 → 행동 변화 데이터 확인",
+                },
+                {
+                  num: "3", color: C.green, bg: C.greenSoft,
+                  title: "구독 BM + 갓생 플랫폼",
+                  timeline: "12개월 ~ · 41세",
+                  desc: "월 2만원 구독 시작. 1000명이면 월 990만원. 무료: 도파민 레벨 진단 + 기본 체크포인트. 유료: AI 에이전트 실시간 개입 + 레벨 시스템 + 건설적 도파민 리다이렉션.",
+                  sub: "사업화 여부 판단: 자발적 재방문 / 한 문장 가치 설명 / 행동 변화 데이터 / 결제 의향",
+                },
+              ].map((phase, i) => (
+                <div key={i} style={{ background: phase.bg, border: `1px solid ${phase.color}40`, borderRadius: 14, padding: "24px", marginBottom: 16 }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 12 }}>
+                    <div style={{ width: 36, height: 36, borderRadius: "50%", background: phase.color, color: "#fff", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 16, fontWeight: 700, flexShrink: 0 }}>{phase.num}</div>
+                    <div>
+                      <div style={{ fontSize: 16, fontWeight: 700, color: C.text }}>{phase.title}</div>
+                      <div style={{ fontSize: 12, color: phase.color, fontWeight: 600 }}>{phase.timeline}</div>
+                    </div>
+                  </div>
+                  <p style={{ ...s.p, marginBottom: 12 }}>{phase.desc}</p>
+                  <div style={{ padding: "10px 14px", background: "rgba(255,255,255,0.5)", borderRadius: 8, fontSize: 13, color: C.mid, fontWeight: 600 }}>→ {phase.sub}</div>
+                </div>
+              ))}
+            </Section>
+
+            {/* 분기별 운영 프레임 */}
+            <Section num="04" title="2026.4 ~ 2027.3 분기별 목표" sub="연간 실험 로드맵">
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
+                {[
+                  { q: "Q1 (4-6월)", color: C.accent, bg: C.accentSoft, content: "문제 정의 잠금 · 타깃 인터뷰 20-30명 · 핵심 로그 정리 · '왜 열어야 하는지' 서사 다듬기 · 내 카드 데이터로 Phase 0 프로토타입" },
+                  { q: "Q2 (7-9월)", color: C.blue, bg: C.blueSoft, content: "리텐션 구조 개선 · 트리거/게이트 설계 강화 · 콘텐츠 유입 실험 · '한 문장 가치제안' 고정" },
+                  { q: "Q3 (10-12월)", color: C.purple, bg: C.purpleSoft, content: "유저 세그먼트 분화 · 핵심 기능 덜어내기 · 반복 행동 유도 · 초기 유료화 가능성 탐색" },
+                  { q: "Q4 (1-3월)", color: C.green, bg: C.greenSoft, content: "이것이 진짜 사업인지 판단 · 사업화 / 오픈소스 / 브랜드자산화 / 다른 도메인 확장 중 선택" },
+                ].map((item, i) => (
+                  <div key={i} style={{ background: item.bg, border: `1px solid ${item.color}30`, borderRadius: 12, padding: "20px" }}>
+                    <div style={{ fontSize: 13, fontWeight: 700, color: item.color, marginBottom: 10 }}>{item.q}</div>
+                    <p style={{ ...s.p, fontSize: 13 }}>{item.content}</p>
+                  </div>
+                ))}
+              </div>
+            </Section>
+
+            {/* 금지선 4조 */}
+            <Section num="05" title="1년 딥다이브 금지선" sub="이 선을 넘으면 선물판과 같은 구조다">
+              <div style={{ background: C.dangerSoft, border: `2px solid ${C.danger}`, borderRadius: 14, padding: "24px" }}>
+                <div style={{ fontSize: 13, fontWeight: 700, color: C.danger, marginBottom: 16 }}>🚫 4개 금지선</div>
+                <ol style={{ paddingLeft: 20, fontSize: 14, color: C.mid, margin: "0 0 16px", lineHeight: 2.2 }}>
+                  <li><strong>유저 없는 개발 금지</strong> — 만들기 전에 사람을 만나라</li>
+                  <li><strong>로그 없는 확신 금지</strong> — 느낌이 아니라 데이터로 판단하라</li>
+                  <li><strong>매주 산출물 없는 탐구 금지</strong> — 코드든 문서든 인터뷰 노트든 매주 하나는 남겨라</li>
+                  <li><strong>제품과 자기존재를 동일시 금지</strong> — WAVE가 안 되면 네가 끝나는 게 아니다</li>
+                </ol>
+                <div style={{ padding: "14px 16px", background: "rgba(185,68,68,0.12)", borderRadius: 8, fontSize: 14, fontWeight: 700, color: C.danger, textAlign: "center" }}>
+                  WAVE는 첫 번째 증명 무기다. 무기가 부러지면 다음 무기를 만든다.
+                </div>
+              </div>
+            </Section>
+
+            {/* 매주 금요일 자기점검 */}
+            <Section num="06" title="매주 금요일 — 3개만 묻는다" sub="더 복잡하게 만들지 않는다">
+              <div style={s.card}>
+                {[
+                  "이번 주 사용자와 대화했는가? (인터뷰, DM, 피드백 뭐든)",
+                  "이번 주 하나를 검증했는가? (가설 → 실험 → 결과)",
+                  "이번 주 선물판 사고방식이 나를 지배한 순간이 있었는가?",
+                ].map((q, i) => (
+                  <div key={i} style={{ display: "flex", alignItems: "flex-start", gap: 12, padding: "14px 0", borderBottom: i < 2 ? `1px solid ${C.surface2}` : "none" }}>
+                    <div style={{ width: 20, height: 20, border: `2px solid ${C.border}`, borderRadius: 4, flexShrink: 0, marginTop: 2 }} />
+                    <span style={{ fontSize: 14, color: C.mid, lineHeight: 1.7 }}>{q}</span>
+                  </div>
+                ))}
+              </div>
+            </Section>
+
+            {/* 1년 후 판단 기준 */}
+            <div style={{ background: C.greenSoft, border: `2px solid ${C.green}`, borderRadius: 14, padding: "28px", marginBottom: 40 }}>
+              <div style={{ fontSize: 11, letterSpacing: 4, color: C.green, fontWeight: 700, marginBottom: 12 }}>2027년 3월 — 사업화 판단 기준</div>
+              <div style={{ fontSize: 16, fontWeight: 700, color: C.text, marginBottom: 16 }}>이 4개 중 3개 이상 YES면 사업화</div>
+              {[
+                "사용자가 자발적으로 다시 오는가?",
+                "한 문장으로 가치가 설명되는가?",
+                "실제 행동 변화가 데이터로 보이는가?",
+                "돈을 내겠다는 사람이 있는가?",
+              ].map((q, i) => (
+                <div key={i} style={{ display: "flex", alignItems: "center", gap: 12, padding: "10px 0", borderBottom: i < 3 ? `1px solid rgba(61,122,80,0.15)` : "none" }}>
+                  <div style={{ width: 22, height: 22, border: `2px solid ${C.green}`, borderRadius: 4, flexShrink: 0 }} />
+                  <span style={{ fontSize: 14, color: C.mid, fontWeight: 500 }}>{q}</span>
+                </div>
+              ))}
+            </div>
+          </>
+        )}
+
+        {/* ═══════════════════════════════════════ */}
+        {/* TAB: ACTION */}
+        {/* ═══════════════════════════════════════ */}
+        {tab === "action" && (
+          <>
+            <Section num="" title="즉시 실행" sub="날짜가 붙었을 때 원칙이 행동이 된다">
+              {[
+                {
+                  text: "선물 계좌 해지 완료",
+                  sub: "모든 선물/코인선물/레버리지 ETF 계좌",
+                  color: C.danger,
+                },
+                {
+                  text: "J은행2 (196만원) 즉시 상환",
+                  sub: "스노우볼 1단계 시작. 가장 작은 것부터.",
+                  color: C.accent,
+                },
+                {
+                  text: "비상금 1,000만원 별도 계좌에 이체",
+                  sub: "딸의 펀드 시작 조건 #3",
+                  color: C.accent,
+                },
+                {
+                  text: "카드앱에서 최근 3개월 이용내역 CSV 다운로드",
+                  sub: "Wave OS Phase 0의 첫 걸음",
+                  color: C.blue,
+                },
+                {
+                  text: "선물로 크게 잃어본 사람 5명에게 DM 보내기",
+                  sub: '"저도 6년간 다 잃었는데, 그때 어떤 순간에 버튼을 눌렀는지 얘기 나눌 수 있을까요?"',
+                  color: C.blue,
+                },
+                {
+                  text: "Wave OS 노션 폴더에 '매주 검증 로그' 페이지 만들기",
+                  sub: "매주 금요일 3개 질문 기록 공간",
+                  color: C.purple,
+                },
+                {
+                  text: "내 도파민 트리거 리스트 작성",
+                  sub: "선물 차트, 충동 구매, 배달앱, SNS 스크롤, 흡연 등",
+                  color: C.purple,
+                },
+                {
+                  text: "J은행1 만기 연장 확인 (6월 만기)",
+                  sub: "연장 불가 시 대환 옵션 탐색",
+                  color: C.danger,
+                },
+                {
+                  text: "N은행 만기 연장 확인 (8월 만기)",
+                  sub: "4,000만원 — 연장 여부 사전 확인",
+                  color: C.danger,
+                },
+              ].map((item, i) => (
+                <div key={i} style={{ display: "flex", alignItems: "flex-start", gap: 16, padding: "20px 0", borderBottom: `1px solid ${C.surface2}` }}>
+                  <div style={{ width: 24, height: 24, border: `2px solid ${item.color}`, borderRadius: 5, flexShrink: 0, marginTop: 2 }} />
+                  <div style={{ flex: 1 }}>
+                    <div style={{ fontSize: 15, fontWeight: 700, color: C.text, marginBottom: 4 }}>{item.text}</div>
+                    <div style={{ fontSize: 13, color: C.dim, lineHeight: 1.6 }}>{item.sub}</div>
+                  </div>
+                  <div style={{ fontSize: 12, color: C.muted, whiteSpace: "nowrap", flexShrink: 0 }}>____년 __월 __일</div>
+                </div>
+              ))}
+            </Section>
+
+            <div style={{ ...s.card, background: C.accentSoft, border: `1px solid ${C.accent}`, textAlign: "center", marginTop: 8 }}>
+              <p style={{ fontSize: 16, fontWeight: 700, color: C.text, margin: "0 0 8px", lineHeight: 2 }}>
+                작은 것들의 신.<br />
+                작게 작게 하나씩 위닝해나간다.
+              </p>
+              <p style={{ fontSize: 13, color: C.dim, margin: 0 }}>오늘 이 중 하나만 완료해도 된다.</p>
+            </div>
           </>
         )}
 
