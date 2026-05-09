@@ -1,5 +1,5 @@
 "use client";
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 
 // ── Data ──
 const LOANS = [
@@ -64,190 +64,83 @@ const SECTIONS_DATA = {
 const MANTRAS = {
   sovereignty: {
     label: "주권",
-    sub: "나는 더 이상 의탁하지 않는다",
-    items: [
-      "나는 더 이상 의탁하지 않는다.",
-      "내 인생의 주도권을 다시 가져온다.",
-      "복수는 설명이 아니라 독립이다.",
-      "나는 피해자가 아니라 설계자다.",
-    ],
-  },
-  anger: {
-    label: "분노",
-    sub: "감정은 인정한다. 결정은 보류한다",
-    items: [
-      "감정은 인정한다. 결정은 보류한다.",
-      "분노한 손으로 돈을 만지지 않는다.",
-      "오늘의 복수는 충동이 아니라 루틴이다.",
-      "지금 해야 할 일은 증명하는 것이 아니라 버티는 것이다.",
-    ],
-  },
-  comparison: {
-    label: "비교",
-    sub: "그들은 경쟁자가 아니라 감정 버튼이다",
-    items: [
-      "그들은 내 경쟁자가 아니라 감정 버튼일 뿐이다.",
-      "비교는 내 속도를 빼앗는다.",
-      "나는 남의 자산이 아니라 내 시스템을 본다.",
-      "내 승리는 더 이상 흔들리지 않는 것이다.",
-    ],
+    one: "내 인생, 내가 운전한다.",
+    extra: ["설명이 아니라 독립.", "피해자가 아니라 설계자."],
   },
   money_gate: {
     label: "돈 게이트",
-    sub: "분노·조급함·비교가 있는 날엔 보류한다",
-    items: [
-      "이 결정은 평온한 상태에서 내린 것인가?",
-      "분노, 조급함, 비교가 하나라도 있다면 오늘은 보류한다.",
-      "오늘 멈추는 것은 패배가 아니라 생존 전략이다.",
-      "한 방은 나를 구한 적이 없다. 구조만이 나를 살렸다.",
-    ],
+    one: "평온할 때만 손댄다.",
+    extra: ["분노·조급·비교 하나라도 있으면 보류.", "한 방은 단 한 번도 나를 구한 적 없다."],
+  },
+  comparison: {
+    label: "비교",
+    one: "동생은 경쟁자가 아니라 감정 버튼.",
+    extra: ["비교는 속도를 빼앗는다.", "남의 자산 말고 내 시스템."],
+  },
+  anger: {
+    label: "분노",
+    one: "분노한 손으로 돈 만지지 않는다.",
+    extra: ["감정은 인정. 결정은 보류.", "증명보다 버티기."],
+  },
+  pipeline: {
+    label: "흐름",
+    one: "한 방이 아니라 흐름.",
+    extra: ["기록 하나 = 자산 하나.", "감정은 소비, 구조는 자산."],
   },
   family: {
     label: "가족",
-    sub: "오늘의 절제는 가장 조용한 사랑이다",
-    items: [
-      "나는 은채에게 무너진 아버지가 아니라 다시 세운 아버지로 남는다.",
-      "오늘의 절제는 가족에게 보내는 가장 조용한 사랑이다.",
-      "내 가족은 내 충동의 피해자가 아니라 내 회복의 이유다.",
-      "은채에게 물려줄 것은 돈만이 아니라 다시 세우는 태도다.",
-    ],
-  },
-  pipeline: {
-    label: "파이프라인",
-    sub: "감정은 소비되지만 구조는 자산이 된다",
-    items: [
-      "나는 월급만으로 끝나는 사람이 아니다. 나는 파이프라인을 설계하는 사람이다.",
-      "오늘의 작은 기록이 내일의 상품이 된다.",
-      "감정은 소비되지만 구조는 자산이 된다.",
-      "돈은 한 방으로 얻는 것이 아니라 흐름으로 만든다.",
-    ],
+    one: "오늘의 절제가 가장 조용한 사랑.",
+    extra: ["은채에게 ‘다시 세우는 태도’를 물려준다.", "가족은 회복의 이유."],
   },
   recovery: {
-    label: "회복",
-    sub: "자책하지 않는다. 분석하고 복귀한다",
-    items: [
-      "실패했다. 하지만 시스템 밖으로 나가지는 않는다.",
-      "오늘의 실수는 정체성이 아니다. 복구 루틴의 시작점이다.",
-      "무너진 날에도 기록하면 자산이 된다.",
-      "자책하지 않는다. 분석하고 복귀한다.",
-    ],
+    label: "복귀",
+    one: "자책 말고 분석. 그리고 복귀.",
+    extra: ["무너진 날도 기록하면 자산.", "실수는 정체성이 아니다, 시작점이다."],
   },
 };
 
+const ROTATION = ["sovereignty", "money_gate", "comparison", "anger", "pipeline", "family", "recovery"];
+
 const FIVE_YEAR_PLAN = [
-  {
-    phase: "Phase 1",
-    range: "0–3개월",
-    title: "파산 방지 + 에너지 회복",
-    body: "또 무너지지 않는 것이 우선이다. 선물 대형 베팅 차단 — 검증용 소액만. 수면·위장·허리·체력 회복. 본업 안정. 사이드 프로젝트 1개만 메인.",
-    bullets: [
-      "선물: 검증용 소액만 (월 50만원 이하)",
-      "수면 6.5h+, 운동 주 3회 30분 이상",
-      "본업 신뢰 유지 — 흔들리지 않는다",
-      "Coin Radar 또는 WAVE 중 하나만 메인",
-    ],
-    avoid: "이번 한 번만 크게 / 빨리 1억 / 동생 청약에 반응 / 부모에게 결과 보여주기",
-  },
-  {
-    phase: "Phase 2",
-    range: "3–12개월",
-    title: "한 제품을 돈 되는 형태로",
-    body: "Coin Radar = 단기 수익화 실험. WAVE = 장기 브랜드/철학/OS. YouTube/Threads = 유입 채널. AI Agent = 운영 자동화 엔진.",
-    bullets: [
-      "Coin Radar: 텔레그램 기반 유료 알림/리포트 MVP",
-      "WAVE: 무료/저가 행동통제 툴로 브랜딩",
-      "Threads 팔로워 1만",
-      "월 수익: 100만 → 300만 → 1,000만 테스트",
-    ],
-    avoid: null,
-  },
-  {
-    phase: "Phase 3",
-    range: "1–2년",
-    title: "월 3,000만 구조",
-    body: "구독형 수익이 핵심. 일회성 컨설팅은 몸을 갈아넣는다. 콘텐츠 → 신뢰 → 무료 툴 → 유료 구독 → 고가 리포트/자동화 → B2B/투자/매각.",
-    bullets: [
-      "Coin Radar 구독: 월 1,000만",
-      "AI 자동화/컨설팅: 월 500–1,000만",
-      "YouTube/콘텐츠: 월 300–500만",
-      "WAVE 유료화: 월 300–1,000만",
-    ],
-    avoid: null,
-  },
-  {
-    phase: "Phase 4",
-    range: "2–3년",
-    title: "법인화 + 팀 구성",
-    body: "개인 창작자가 아니라 대표가 된다. 팀은 작게 — 개발자 1, 편집자 1, 운영/CS 1, 리서치 1, 그리고 나(PM/대표/브랜드/세일즈).",
-    bullets: [
-      "역할: 시장 고통을 읽고 제품 방향을 정한다",
-      "역할: 메시지를 만들고 돈이 흐르는 구조를 설계한다",
-      "직접 모든 걸 하지 않는다",
-    ],
-    avoid: null,
-  },
-  {
-    phase: "Phase 5",
-    range: "3–5년",
-    title: "월 2억 가능 구간",
-    body: "단일 상품으로 못 만든다. 포트폴리오 구조. 핵심은 “하나 터져라”가 아니라 여러 개가 동시에 굴러가는 것.",
-    bullets: [
-      "Coin Radar Pro 구독: 월 5,000만",
-      "WAVE 유료 구독: 월 3,000만",
-      "AI 자동화 B2B: 월 5,000만",
-      "콘텐츠/광고/제휴: 월 2,000만",
-      "프리미엄 리포트/커뮤니티: 월 3,000만",
-      "투자/지분/기타: 월 2,000만",
-    ],
-    avoid: null,
-  },
+  { phase: "P1", range: "0–3개월", title: "파산 방지 + 에너지 회복", bullets: ["선물은 검증용 소액만", "수면 6.5h+, 주 3회 운동", "본업 안정", "사이드는 한 개만"] },
+  { phase: "P2", range: "3–12개월", title: "한 제품을 돈 되는 형태로", bullets: ["Coin Radar = 단기 수익화", "WAVE = 장기 브랜드", "Threads 1만", "월 100→300→1,000만"] },
+  { phase: "P3", range: "1–2년", title: "월 3,000만 구조", bullets: ["Coin Radar 구독 1,000만", "자동화/컨설팅 500–1,000만", "콘텐츠 300–500만", "WAVE 유료화 300–1,000만"] },
+  { phase: "P4", range: "2–3년", title: "법인화 + 작은 팀", bullets: ["개발 1 / 편집 1 / 운영 1 / 리서치 1", "내 역할은 방향·메시지·구조", "직접 다 하지 않는다"] },
+  { phase: "P5", range: "3–5년", title: "월 2억 — 포트폴리오", bullets: ["Pro 구독 5,000만", "유료 구독 3,000만", "B2B 5,000만", "콘텐츠/제휴 2,000만", "리포트/커뮤니티 3,000만", "투자/기타 2,000만"] },
 ];
 
 const DROP_LIST = [
-  {
-    title: "선물로 인생 역전하려는 생각",
-    body: "선물을 끊는 게 아니다. 선물이 메인 루트가 되면 안 되는 것이다. 이제 선물은 돈 버는 도구가 아니라 WAVE/Coin Radar의 검증 데이터다.",
-    arc: ["과거 — 선물로 인생을 바꾼다", "현재 — 선물 실패를 제품으로 바꾼다", "미래 — 선물 중독자의 고통을 해결하는 대표가 된다"],
-  },
-  {
-    title: "부모에게 설명하려는 욕구",
-    body: "부모에게 ‘내가 왜 이렇게 됐는지’ 설명하면 진다. 할 일은 설명이 아니라 결과로 침묵시키는 것. 그 결과도 ‘나 돈 벌었다, 봤냐?’가 아니라 ‘나는 이제 너희 평가 바깥에 있다.’",
-    arc: null,
-  },
-  {
-    title: "동생과 비교하는 루프",
-    body: "동생은 경쟁자가 아니라 감정 버튼이다. 진짜 경쟁자는 충동매매·조급함·분노 기반 의사결정·수면 붕괴·체력 저하·완성 전 도망가는 습관이다.",
-    arc: null,
-  },
+  { title: "선물로 한 방", body: "선물은 메인 루트 아님. 검증 데이터로만 쓴다." },
+  { title: "부모에게 설명", body: "설명하면 진다. 결과로 침묵시킨다." },
+  { title: "동생과 비교", body: "동생은 감정 버튼. 진짜 적은 충동·조급·분노." },
 ];
 
 const ACTIONS_30D = [
-  "부모/동생 관련 분노가 올라오면 매매 금지",
-  "Coin Radar와 WAVE 중 이번 달 메인 하나 선정",
-  "Threads에 ‘무너진 트레이더의 행동 OS’ 서사로 글 30개 발행",
-  "YouTube 채널 방향 1개만 선택",
-  "월 가용자금/부채/투자금 다시 정리",
-  "주 3회 걷기 또는 헬스 시작",
-  "5년 주권 회복 플랜을 매일 보이는 곳에 박제",
+  "분노 올라온 날엔 차트 안 연다",
+  "이번 달 메인: Coin Radar 또는 WAVE 중 하나만",
+  "Threads 글 30개 (무너진 트레이더 시리즈)",
+  "YouTube 방향 1개 결정",
+  "월 가용자금·부채·투자금 1장으로 정리",
+  "주 3회 걷기 또는 헬스",
+  "이 화면, 매일 아침 30초",
 ];
 
 const HEALTH_RULES = [
-  { k: "수면", v: "하루 6.5시간 이상" },
-  { k: "운동", v: "주 3회, 30분 이상" },
-  { k: "술", v: "감정 무너질 때 금지" },
-  { k: "담배", v: "호흡 문제 시 감축 루틴" },
-  { k: "건강검진", v: "위장/호흡/간/혈압/혈당" },
-  { k: "정신 루틴", v: "분노 올라올 때 매매 금지" },
+  { k: "수면", v: "6.5h+" },
+  { k: "운동", v: "주 3회, 30분" },
+  { k: "술", v: "감정 무너진 날 금지" },
+  { k: "담배", v: "호흡 이상 시 감축" },
+  { k: "검진", v: "위·호흡·간·혈압·혈당" },
+  { k: "정신", v: "분노 = 매매 금지" },
 ];
 
 const DECLARATION = [
-  "나는 부모에게 의탁하지 않는다.",
-  "나는 동생과 비교해서 무너지는 사람이 아니다.",
-  "나는 내가 겪은 실패, 부채, 중독, 수치심을 제품과 콘텐츠와 시스템으로 바꾼다.",
-  "나는 선물로 인생을 되찾는 사람이 아니라, 선물에 무너진 인간의 행동을 구조화해 시장을 만드는 사람이 된다.",
-  "나는 은채에게 분노로 무너진 아버지가 아니라, 분노를 연료로 바꿔 집을 세운 아버지로 남는다.",
-  "나의 복수는 파괴가 아니다.",
-  "나의 복수는 건강, 부, 품격, 가족의 안정, 그리고 완전한 독립이다.",
+  "의탁하지 않는다.",
+  "비교로 무너지지 않는다.",
+  "실패를 제품으로 바꾼다.",
+  "선물에 무너진 사람의 행동을 구조화한다.",
+  "은채에게 ‘다시 세우는 아버지’로 남는다.",
+  "건강 · 부 · 품격 · 가족 · 독립.",
 ];
 
 // ── Helpers ──
@@ -489,7 +382,23 @@ export default function LifeOS() {
   const [monthly, setMonthly] = useState(50);
   const [years, setYears] = useState(20);
   const [esc, setEsc] = useState(5);
+  const [todayKey, setTodayKey] = useState("sovereignty");
+  const [actionIdx, setActionIdx] = useState(0);
+  const [todayLabel, setTodayLabel] = useState("");
   const [mantraKey, setMantraKey] = useState("sovereignty");
+  const [check, setCheck] = useState({ anger: false, rush: false, compare: false });
+
+  useEffect(() => {
+    const d = new Date();
+    const dow = d.getDay();
+    setTodayKey(ROTATION[dow]);
+    setActionIdx(d.getDate() % ACTIONS_30D.length);
+    const wk = ["일", "월", "화", "수", "목", "금", "토"][dow];
+    setTodayLabel(`${d.getMonth() + 1}월 ${d.getDate()}일 · ${wk}`);
+    setMantraKey(ROTATION[dow]);
+  }, []);
+
+  const cleared = !check.anger && !check.rush && !check.compare;
 
   const creditLoans = LOANS.filter(l => l.type === "신용").sort((a, b) => b.amount - a.amount);
   const totalCredit = creditLoans.reduce((s, l) => s + l.amount, 0);
@@ -578,12 +487,11 @@ export default function LifeOS() {
               </div>
               <div style={{ ...s.card, borderColor: C.purple, background: C.purpleSoft }}>
                 <div style={{ ...s.label, color: C.purple }}>그 후 — 2026년 5월</div>
-                <h3 style={s.h3}>끊지 않는다. 운전대는 시스템이 잡는다.</h3>
+                <h3 style={s.h3}>끊지 않는다. 운전대를 바꾼다.</h3>
                 <p style={s.p}>
-                  3월의 그 ‘끝났다’는 진심이었다. 그러나 5월의 나는 한 번 더 정직해진다.
-                  <strong> 선물을 아직 끊지 못했다. 끊을 생각도 없다.</strong> 다만 더 이상 감정으로 손대지 않는다.
-                  나는 계속 실험으로 나아간다 — <strong>정확한 원칙</strong>을 통해서. 집은 8억+로 올라왔고, 대출 구조는 그대로 버틴다.
-                  복수심으로 시동을 걸되, 운전대는 시스템이 잡는다. 그게 5월의 결론이다.
+                  3월에 ‘끝났다’고 적었다. 진심이었다. 5월에 한 가지 더 정직해진다.
+                  <strong> 아직 안 끊었고, 끊을 생각도 없다.</strong> 다만 감정으로 손대지 않는다.
+                  실험은 계속한다 — 원칙 안에서만. 집은 8억+, 부채는 그대로. 메인은 제품·시스템.
                 </p>
               </div>
               <div style={{ ...s.card, borderColor: C.purple, background: C.purpleSoft }}>
@@ -608,30 +516,27 @@ export default function LifeOS() {
             </Section>
 
             {/* Futures — Not the main route */}
-            <Section num="03" title="선물 — 끊지 않는다, 운전대는 시스템이 잡는다" sub="메인 루트 아님. 검증 실험으로 전환. 정확한 원칙 안에서만 산다.">
-              <div style={{ background: C.accentSoft, border: `1px solid ${C.accent}`, borderRadius: 12, padding: "20px 24px", marginBottom: 16, fontSize: 14, color: C.text, lineHeight: 1.85 }}>
-                <strong style={{ color: C.accent }}>프레임 전환.</strong> 선물은 더 이상 인생을 역전시키는 수단이 아니다.
-                이제 선물은 <strong>WAVE / Coin Radar의 검증 데이터</strong>다. 메인 루트는 제품·시스템·콘텐츠.
-                선물은 그 위에서 돌아가는 보조 실험일 뿐이다. <strong>복수심으로 시동을 걸고, 시스템으로 운전한다.</strong>
+            <Section num="03" title="선물 — 메인 루트 아님" sub="끊지 않는다. 단, 운전대는 시스템이 잡는다.">
+              <div style={{ background: C.surface, border: `1px solid ${C.border}`, borderRadius: 12, padding: "22px 24px", marginBottom: 16, fontSize: 14, color: C.mid, lineHeight: 1.9 }}>
+                선물은 인생을 역전시키는 수단이 아니다. <strong style={{ color: C.text }}>검증 데이터</strong>다.
+                메인은 제품·시스템·콘텐츠. 선물은 그 위에서 도는 보조 실험일 뿐이다.
               </div>
-              <div style={{ background: C.surface, border: `1px solid ${C.border}`, borderRadius: 12, padding: "28px", marginBottom: 16 }}>
-                <h3 style={{ color: C.accent, fontSize: 16, fontWeight: 700, marginBottom: 14 }}>💰 돈 게이트 — 손대기 전 4문</h3>
-                <ol style={{ paddingLeft: 20, fontSize: 14, color: C.mid, margin: 0 }}>
-                  {MANTRAS.money_gate.items.map((t, i) => (
-                    <li key={i} style={{ marginBottom: 8, lineHeight: 1.7 }}>{t}</li>
-                  ))}
-                </ol>
-                <p style={{ ...s.p, marginTop: 14, fontSize: 13, color: C.dim }}>
-                  분노·조급함·비교가 하나라도 끼어 있으면 오늘은 보류. 멈추는 것은 패배가 아니라 생존 전략이다.
-                </p>
+              <div style={{ background: C.surface, border: `1px solid ${C.border}`, borderRadius: 12, padding: "20px 24px", marginBottom: 16 }}>
+                <div style={{ ...s.label, color: C.accent, marginBottom: 12 }}>손대기 전 4문</div>
+                <ul style={{ paddingLeft: 18, fontSize: 14, color: C.mid, margin: 0, lineHeight: 1.9 }}>
+                  <li>지금 평온한가?</li>
+                  <li>분노·조급·비교 — 하나라도 있으면 오늘은 보류.</li>
+                  <li>멈추는 건 패배가 아니다. 생존이다.</li>
+                  <li>한 방은 단 한 번도 나를 구한 적 없다.</li>
+                </ul>
               </div>
-              <div style={{ background: C.surface, border: `1px solid ${C.border}`, borderRadius: 12, padding: "24px", marginBottom: 16 }}>
-                <div style={{ ...s.label, color: C.accent }}>운영 규칙</div>
-                <ul style={{ paddingLeft: 20, fontSize: 14, color: C.mid, margin: "8px 0 0", lineHeight: 1.85 }}>
-                  <li>선물은 메인 루트가 아니다. 가용 시간·자본의 메인은 제품과 콘텐츠다.</li>
-                  <li>분노·조급함·비교 상태에서는 절대 진입하지 않는다.</li>
-                  <li>모든 진입·청산·손익은 데이터로 기록한다 — 그 자체가 자산이다.</li>
-                  <li>한 방으로 회복하려는 베팅은 금지. 한 방은 한 번도 나를 구한 적이 없다.</li>
+              <div style={{ background: C.surface, border: `1px solid ${C.border}`, borderRadius: 12, padding: "20px 24px", marginBottom: 16 }}>
+                <div style={{ ...s.label, color: C.accent, marginBottom: 12 }}>운영 규칙</div>
+                <ul style={{ paddingLeft: 18, fontSize: 14, color: C.mid, margin: 0, lineHeight: 1.9 }}>
+                  <li>메인 루트 아님 — 시간·자본은 제품으로.</li>
+                  <li>감정 상태에서 진입 금지.</li>
+                  <li>모든 진입·청산은 기록. 기록이 자산.</li>
+                  <li>‘회복용 한 방’ 금지.</li>
                 </ul>
               </div>
               <FuturesSimulator />
@@ -687,134 +592,174 @@ export default function LifeOS() {
         {/* ═══════════════════════════════════════ */}
         {tab === "sovereignty" && (
           <>
-            {/* Hero */}
-            <div style={{ textAlign: "center", padding: "40px 28px", background: C.surface, border: `1px solid ${C.border}`, borderRadius: 16, marginBottom: 32, boxShadow: "0 2px 8px rgba(0,0,0,0.03)" }}>
-              <div style={{ fontSize: 11, letterSpacing: 5, color: C.accent, textTransform: "uppercase", marginBottom: 12 }}>★ 복수 → 주권 회복</div>
-              <h2 style={{ fontSize: 22, fontWeight: 700, marginBottom: 12, lineHeight: 1.5 }}>복수심으로 시동을 걸고,<br />시스템으로 운전한다.</h2>
-              <p style={{ fontSize: 14, color: C.dim, maxWidth: 520, margin: "0 auto", lineHeight: 1.85 }}>
-                부모를 이기는 게 아니다. <strong>부모가 만든 프레임 밖으로 나가는 것.</strong>
-                감정으로 밀면 또 무너진다. 운전대는 시스템이 잡는다.
-              </p>
+            {/* Today header */}
+            <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", marginBottom: 14 }}>
+              <div style={{ fontSize: 11, letterSpacing: 3, color: C.accent, fontWeight: 700, textTransform: "uppercase" }}>오늘</div>
+              <div style={{ fontSize: 12, color: C.dim }}>{todayLabel || "—"}</div>
             </div>
 
-            {/* Declaration */}
-            <Section num="01" title="정제된 선언" sub="감정으로 적는 게 아니라, 매일 본다">
-              <div style={{ background: C.accentSoft, border: `1px solid ${C.accent}`, borderRadius: 12, padding: "28px", lineHeight: 2.0 }}>
-                {DECLARATION.map((line, i) => (
-                  <div key={i} style={{ fontSize: 15, color: C.text, marginBottom: 10, fontWeight: i === DECLARATION.length - 1 ? 700 : 500 }}>{line}</div>
-                ))}
+            {/* Today's one-line */}
+            <div style={{ background: C.surface, border: `1px solid ${C.border}`, borderRadius: 14, padding: "28px 26px", marginBottom: 12, boxShadow: "0 1px 3px rgba(0,0,0,0.03)" }}>
+              <div style={{ fontSize: 11, color: C.accent, fontWeight: 700, letterSpacing: 2, textTransform: "uppercase", marginBottom: 10 }}>
+                {MANTRAS[mantraKey].label}
               </div>
-            </Section>
+              <div style={{ fontSize: 22, fontWeight: 700, lineHeight: 1.5, color: C.text, marginBottom: 12 }}>
+                {MANTRAS[mantraKey].one}
+              </div>
+              <div style={{ fontSize: 13.5, color: C.dim, lineHeight: 1.8 }}>
+                {MANTRAS[mantraKey].extra.join(" · ")}
+              </div>
+            </div>
 
-            {/* Mantras */}
-            <Section num="02" title="7가지 만트라" sub="흔들리는 영역을 골라 그날의 문장을 본다">
-              <div style={{ display: "flex", flexWrap: "wrap", gap: 6, marginBottom: 16 }}>
+            {/* Category chips */}
+            <div style={{ display: "flex", flexWrap: "wrap", gap: 6, marginBottom: 28 }}>
+              {Object.entries(MANTRAS).map(([k, m]) => (
+                <button key={k} onClick={() => setMantraKey(k)} style={{
+                  padding: "6px 12px", fontSize: 12.5, fontWeight: mantraKey === k ? 700 : 500,
+                  color: mantraKey === k ? "#fff" : C.dim,
+                  background: mantraKey === k ? C.accent : "transparent",
+                  border: `1px solid ${mantraKey === k ? C.accent : C.border}`,
+                  borderRadius: 999, cursor: "pointer", fontFamily: "inherit",
+                }}>{m.label}{k === todayKey && mantraKey !== k ? " ·" : ""}</button>
+              ))}
+            </div>
+
+            {/* Condition check */}
+            <div style={{ background: C.surface, border: `1px solid ${C.border}`, borderRadius: 12, padding: "20px 22px", marginBottom: 28 }}>
+              <div style={{ ...s.label, color: C.accent, marginBottom: 14 }}>오늘 컨디션</div>
+              {[
+                { k: "anger", t: "분노가 올라와 있다" },
+                { k: "rush", t: "조급하다" },
+                { k: "compare", t: "누군가와 비교하고 있다" },
+              ].map(item => (
+                <label key={item.k} style={{ display: "flex", alignItems: "center", gap: 12, padding: "8px 0", cursor: "pointer" }}>
+                  <input
+                    type="checkbox"
+                    checked={check[item.k]}
+                    onChange={e => setCheck(c => ({ ...c, [item.k]: e.target.checked }))}
+                    style={{ width: 16, height: 16, accentColor: C.accent, cursor: "pointer" }}
+                  />
+                  <span style={{ fontSize: 14, color: C.mid }}>{item.t}</span>
+                </label>
+              ))}
+              <div style={{
+                marginTop: 14, padding: "12px 14px", borderRadius: 8,
+                background: cleared ? C.greenSoft : C.dangerSoft,
+                color: cleared ? C.green : C.danger,
+                fontSize: 13.5, fontWeight: 700, textAlign: "center",
+              }}>
+                {cleared ? "평온하다 — 진입 가능" : "보류한다 — 오늘은 쉰다"}
+              </div>
+            </div>
+
+            {/* Today's action */}
+            <div style={{ marginBottom: 28 }}>
+              <div style={{ ...s.label, color: C.accent, marginBottom: 10 }}>오늘 한 가지</div>
+              <div style={{ background: C.surface, border: `1px solid ${C.border}`, borderRadius: 12, padding: "20px 22px", fontSize: 16, color: C.text, lineHeight: 1.6 }}>
+                {ACTIONS_30D[actionIdx]}
+              </div>
+            </div>
+
+            {/* Expandable: 7 mantras full */}
+            <details style={{ marginBottom: 10, background: C.surface, border: `1px solid ${C.border}`, borderRadius: 10 }}>
+              <summary style={{ padding: "14px 18px", fontSize: 14, fontWeight: 600, color: C.text, cursor: "pointer", listStyle: "none" }}>
+                7개 카테고리 전부 보기
+              </summary>
+              <div style={{ padding: "0 18px 18px" }}>
                 {Object.entries(MANTRAS).map(([k, m]) => (
-                  <button key={k} onClick={() => setMantraKey(k)} style={{
-                    padding: "8px 14px", fontSize: 13, fontWeight: mantraKey === k ? 700 : 500,
-                    color: mantraKey === k ? "#fff" : C.mid,
-                    background: mantraKey === k ? C.accent : C.surface,
-                    border: `1px solid ${mantraKey === k ? C.accent : C.border}`,
-                    borderRadius: 999, cursor: "pointer", fontFamily: "inherit", transition: "all 0.2s",
-                  }}>{m.label}</button>
-                ))}
-              </div>
-              <div style={{ background: C.surface, border: `1px solid ${C.border}`, borderRadius: 12, padding: "24px 28px" }}>
-                <div style={{ fontSize: 12, color: C.accent, fontWeight: 700, letterSpacing: 2, textTransform: "uppercase", marginBottom: 6 }}>
-                  {MANTRAS[mantraKey].label}
-                </div>
-                <div style={{ fontSize: 15, color: C.dim, marginBottom: 18, fontStyle: "italic" }}>{MANTRAS[mantraKey].sub}</div>
-                {MANTRAS[mantraKey].items.map((t, i) => (
-                  <div key={i} style={{ ...s.sentence, marginBottom: 10 }}>{t}</div>
-                ))}
-              </div>
-            </Section>
-
-            {/* 5-Year Plan */}
-            <Section num="03" title="5년 플랜 — 월 2억 파이프라인까지" sub="단일 상품 한 방이 아니다. 포트폴리오 구조다.">
-              {FIVE_YEAR_PLAN.map((p, i) => (
-                <div key={i} style={{ ...s.card, borderLeft: `3px solid ${C.accent}` }}>
-                  <div style={{ display: "flex", alignItems: "baseline", gap: 10, marginBottom: 6 }}>
-                    <span style={{ fontSize: 11, fontWeight: 700, color: C.accent, letterSpacing: 2, textTransform: "uppercase" }}>{p.phase}</span>
-                    <span style={{ fontSize: 12, color: C.dim }}>{p.range}</span>
+                  <div key={k} style={{ padding: "12px 0", borderTop: `1px solid ${C.surface2}` }}>
+                    <div style={{ fontSize: 11, color: C.accent, fontWeight: 700, letterSpacing: 2, textTransform: "uppercase", marginBottom: 4 }}>{m.label}</div>
+                    <div style={{ fontSize: 14.5, color: C.text, fontWeight: 600, marginBottom: 4 }}>{m.one}</div>
+                    <div style={{ fontSize: 13, color: C.dim, lineHeight: 1.7 }}>{m.extra.join(" · ")}</div>
                   </div>
-                  <h3 style={{ ...s.h3, marginBottom: 8 }}>{p.title}</h3>
-                  <p style={{ ...s.p, marginBottom: 12 }}>{p.body}</p>
-                  <ul style={{ paddingLeft: 18, fontSize: 13.5, color: C.mid, margin: 0, lineHeight: 1.85 }}>
-                    {p.bullets.map((b, j) => <li key={j} style={{ marginBottom: 4 }}>{b}</li>)}
-                  </ul>
-                  {p.avoid && (
-                    <div style={{ marginTop: 14, padding: "12px 14px", background: C.dangerSoft, borderRadius: 8, fontSize: 13, color: C.danger, lineHeight: 1.7 }}>
-                      <strong>이 감정으로 움직이면 다시 시장이 잡아먹는다 —</strong> {p.avoid}
-                    </div>
-                  )}
-                </div>
-              ))}
-            </Section>
+                ))}
+              </div>
+            </details>
 
-            {/* Drop List */}
-            <Section num="04" title="절대 버려야 할 것 3개" sub="이걸 안 버리면 5년이 다시 6년이 된다">
-              {DROP_LIST.map((d, i) => (
-                <div key={i} style={{ ...s.card }}>
-                  <div style={{ ...s.label, color: C.danger }}>버린다 #{i + 1}</div>
-                  <h3 style={s.h3}>{d.title}</h3>
-                  <p style={s.p}>{d.body}</p>
-                  {d.arc && (
-                    <div style={{ marginTop: 14, padding: "14px 16px", background: C.surface2, borderRadius: 8 }}>
-                      {d.arc.map((line, j) => (
-                        <div key={j} style={{ fontSize: 13, color: C.mid, marginBottom: j < d.arc.length - 1 ? 6 : 0 }}>
-                          <strong style={{ color: C.accent }}>{line.split(" — ")[0]}</strong>
-                          {line.includes(" — ") && <span> — {line.split(" — ")[1]}</span>}
-                        </div>
-                      ))}
+            {/* Expandable: 5-year plan */}
+            <details style={{ marginBottom: 10, background: C.surface, border: `1px solid ${C.border}`, borderRadius: 10 }}>
+              <summary style={{ padding: "14px 18px", fontSize: 14, fontWeight: 600, color: C.text, cursor: "pointer", listStyle: "none" }}>
+                5년 플랜 — 월 2억까지
+              </summary>
+              <div style={{ padding: "0 18px 18px" }}>
+                {FIVE_YEAR_PLAN.map((p, i) => (
+                  <div key={i} style={{ padding: "14px 0", borderTop: `1px solid ${C.surface2}` }}>
+                    <div style={{ display: "flex", alignItems: "baseline", gap: 8, marginBottom: 6 }}>
+                      <span style={{ fontSize: 11, fontWeight: 700, color: C.accent, letterSpacing: 1.5 }}>{p.phase}</span>
+                      <span style={{ fontSize: 11, color: C.dim }}>{p.range}</span>
                     </div>
-                  )}
-                </div>
-              ))}
-            </Section>
+                    <div style={{ fontSize: 14, fontWeight: 600, color: C.text, marginBottom: 6 }}>{p.title}</div>
+                    <div style={{ fontSize: 13, color: C.mid, lineHeight: 1.7 }}>
+                      {p.bullets.join(" · ")}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </details>
 
-            {/* 30-day actions */}
-            <Section num="05" title="30일 액션 7" sub="오늘부터 한 달, 이것만 한다">
-              <div style={{ ...s.card }}>
+            {/* Expandable: drop list */}
+            <details style={{ marginBottom: 10, background: C.surface, border: `1px solid ${C.border}`, borderRadius: 10 }}>
+              <summary style={{ padding: "14px 18px", fontSize: 14, fontWeight: 600, color: C.text, cursor: "pointer", listStyle: "none" }}>
+                버려야 할 3개
+              </summary>
+              <div style={{ padding: "0 18px 18px" }}>
+                {DROP_LIST.map((d, i) => (
+                  <div key={i} style={{ padding: "12px 0", borderTop: `1px solid ${C.surface2}` }}>
+                    <div style={{ fontSize: 14, fontWeight: 600, color: C.text, marginBottom: 4 }}>{d.title}</div>
+                    <div style={{ fontSize: 13, color: C.mid, lineHeight: 1.7 }}>{d.body}</div>
+                  </div>
+                ))}
+              </div>
+            </details>
+
+            {/* Expandable: 30-day actions */}
+            <details style={{ marginBottom: 10, background: C.surface, border: `1px solid ${C.border}`, borderRadius: 10 }}>
+              <summary style={{ padding: "14px 18px", fontSize: 14, fontWeight: 600, color: C.text, cursor: "pointer", listStyle: "none" }}>
+                30일 액션 7개
+              </summary>
+              <div style={{ padding: "0 18px 18px" }}>
                 {ACTIONS_30D.map((a, i) => (
-                  <div key={i} style={{ display: "flex", gap: 14, alignItems: "baseline", padding: "12px 0", borderBottom: i < ACTIONS_30D.length - 1 ? `1px solid ${C.surface2}` : "none" }}>
-                    <span style={{ fontSize: 18, fontWeight: 700, color: C.accent, width: 24, flexShrink: 0, fontFamily: "'Playfair Display', serif" }}>{i + 1}</span>
-                    <span style={{ fontSize: 14, color: C.text, lineHeight: 1.7 }}>{a}</span>
+                  <div key={i} style={{ display: "flex", gap: 12, padding: "10px 0", borderTop: `1px solid ${C.surface2}`, alignItems: "baseline" }}>
+                    <span style={{ fontSize: 13, color: i === actionIdx ? C.accent : C.dim, fontWeight: 700, minWidth: 18 }}>{i + 1}</span>
+                    <span style={{ fontSize: 13.5, color: i === actionIdx ? C.text : C.mid }}>{a}</span>
                   </div>
                 ))}
               </div>
-            </Section>
+            </details>
 
-            {/* Health = 50-year revenge */}
-            <Section num="06" title="50년짜리 복수는 건강이다" sub="마세라티보다 혈압·위장·허리·수면이다">
-              <div style={{ ...s.card, borderLeft: `3px solid ${C.green}` }}>
-                <p style={{ ...s.p, marginBottom: 16 }}>
-                  진짜 압살은 50대의 내가 건강한 몸으로 은채와 여행을 가고, 아내와 좋은 집에서 웃고,
-                  회사와 사업에서 인정받고, 돈 때문에 고개 숙이지 않는 그림이다.
-                  <strong> 건강하지 않은 부자는 복수가 아니다. 건강하고 여유로운 부자가 복수다.</strong>
-                </p>
+            {/* Expandable: health */}
+            <details style={{ marginBottom: 10, background: C.surface, border: `1px solid ${C.border}`, borderRadius: 10 }}>
+              <summary style={{ padding: "14px 18px", fontSize: 14, fontWeight: 600, color: C.text, cursor: "pointer", listStyle: "none" }}>
+                건강 — 50년짜리 베이스
+              </summary>
+              <div style={{ padding: "0 18px 18px" }}>
                 {HEALTH_RULES.map((r, i) => (
-                  <div key={i} style={{ display: "flex", gap: 12, padding: "10px 0", borderTop: i === 0 ? "none" : `1px solid ${C.surface2}` }}>
-                    <span style={{ fontSize: 13, fontWeight: 700, color: C.green, minWidth: 90 }}>{r.k}</span>
+                  <div key={i} style={{ display: "flex", gap: 12, padding: "10px 0", borderTop: `1px solid ${C.surface2}` }}>
+                    <span style={{ fontSize: 13, fontWeight: 700, color: C.green, minWidth: 64 }}>{r.k}</span>
                     <span style={{ fontSize: 13.5, color: C.mid }}>{r.v}</span>
                   </div>
                 ))}
               </div>
-            </Section>
+            </details>
 
-            {/* Closing */}
-            <div style={{ textAlign: "center", padding: "40px 0" }}>
-              <p style={{ fontSize: 17, lineHeight: 2.1 }}>
-                복수심으로 시동을 걸고,<br />
-                시스템으로 운전하고,<br />
-                건강으로 버티고,<br />
-                제품으로 돈을 만들고,<br />
-                은채를 통해 50년짜리 승리를 완성한다.
-              </p>
-              <div style={{ marginTop: 24, fontSize: 13, color: C.dim }}>
-                2026년 5월 · 끊지 않는다, 운전대를 바꾼다<br /><br />
-                <strong style={{ color: C.accent }}>주권 회복 · Life OS v4</strong>
+            {/* Expandable: declaration */}
+            <details style={{ marginBottom: 32, background: C.surface, border: `1px solid ${C.border}`, borderRadius: 10 }}>
+              <summary style={{ padding: "14px 18px", fontSize: 14, fontWeight: 600, color: C.text, cursor: "pointer", listStyle: "none" }}>
+                선언 — 흔들릴 때만 펼친다
+              </summary>
+              <div style={{ padding: "4px 22px 20px" }}>
+                {DECLARATION.map((line, i) => (
+                  <div key={i} style={{
+                    fontSize: 14, color: i === DECLARATION.length - 1 ? C.accent : C.text,
+                    fontWeight: i === DECLARATION.length - 1 ? 700 : 500,
+                    padding: "8px 0", lineHeight: 1.7,
+                  }}>{line}</div>
+                ))}
               </div>
+            </details>
+
+            <div style={{ textAlign: "center", fontSize: 11, color: C.muted, padding: "8px 0 24px" }}>
+              매일 아침 30초. 위에 세 줄만 본다.
             </div>
           </>
         )}
