@@ -12,7 +12,7 @@ const LOANS = [
   { id: "n1", bank: "N은행", amount: 4000, type: "신용", loanType: "마통", rate: 5.71, maturity: "2026.08.25", payDay: 24, monthly: Math.round(4000 * 0.0571 / 12 * 10) / 10, note: "만기 임박 — 연장 필요" },
   { id: "jb1", bank: "JB은행 1", amount: 544, type: "신용", loanType: "원리금균등분할", rate: 7.67, maturity: "2031.01.26", payDay: 26, monthly: 11.3, note: "" },
   { id: "jb2", bank: "JB은행 2", amount: 236, type: "신용", loanType: "원리금균등분할", rate: 7.63, maturity: "2031.02.05", payDay: 5, monthly: 4.8, note: "" },
-  { id: "h1", bank: "H은행 (주담대)", amount: 33700, type: "주담대", loanType: "원리금균등분할", rate: 3.0, maturity: "장기", payDay: 29, monthly: 129, note: "아파트 6.5억 담보" },
+  { id: "h1", bank: "H은행 (주담대)", amount: 33700, type: "주담대", loanType: "원리금균등분할", rate: 3.0, maturity: "장기", payDay: 29, monthly: 129, note: "아파트 8억+ 담보" },
 ];
 
 const SCENARIOS = [
@@ -23,7 +23,7 @@ const SCENARIOS = [
 ];
 
 const REJECT_REASONS = [
-  { name: "코인 선물", reason: "전면 금지. 어떤 레버리지든 나에게는 독." },
+  { name: "코인 선물", reason: "딸의 펀드 트랙에서는 배제. 메인 루트 아님 — 시스템 검증 실험은 별도 트랙(주권 회복 탭)에서 운영." },
   { name: "코인 현물", reason: "역사 15년, -70% 가능. 차트를 보게 되고 매매로 이어진다." },
   { name: "코스피/코스닥", reason: "20년 평균 연 5-6%. 같은 기간 S&P 500은 11%." },
   { name: "개별주 (삼성전자 등)", reason: "판단이 필요. 차트를 보게 하는 문이다." },
@@ -60,6 +60,195 @@ const SECTIONS_DATA = {
     "끝난 건 지옥이다. 나는 시작이다.",
   ],
 };
+
+const MANTRAS = {
+  sovereignty: {
+    label: "주권",
+    sub: "나는 더 이상 의탁하지 않는다",
+    items: [
+      "나는 더 이상 의탁하지 않는다.",
+      "내 인생의 주도권을 다시 가져온다.",
+      "복수는 설명이 아니라 독립이다.",
+      "나는 피해자가 아니라 설계자다.",
+    ],
+  },
+  anger: {
+    label: "분노",
+    sub: "감정은 인정한다. 결정은 보류한다",
+    items: [
+      "감정은 인정한다. 결정은 보류한다.",
+      "분노한 손으로 돈을 만지지 않는다.",
+      "오늘의 복수는 충동이 아니라 루틴이다.",
+      "지금 해야 할 일은 증명하는 것이 아니라 버티는 것이다.",
+    ],
+  },
+  comparison: {
+    label: "비교",
+    sub: "그들은 경쟁자가 아니라 감정 버튼이다",
+    items: [
+      "그들은 내 경쟁자가 아니라 감정 버튼일 뿐이다.",
+      "비교는 내 속도를 빼앗는다.",
+      "나는 남의 자산이 아니라 내 시스템을 본다.",
+      "내 승리는 더 이상 흔들리지 않는 것이다.",
+    ],
+  },
+  money_gate: {
+    label: "돈 게이트",
+    sub: "분노·조급함·비교가 있는 날엔 보류한다",
+    items: [
+      "이 결정은 평온한 상태에서 내린 것인가?",
+      "분노, 조급함, 비교가 하나라도 있다면 오늘은 보류한다.",
+      "오늘 멈추는 것은 패배가 아니라 생존 전략이다.",
+      "한 방은 나를 구한 적이 없다. 구조만이 나를 살렸다.",
+    ],
+  },
+  family: {
+    label: "가족",
+    sub: "오늘의 절제는 가장 조용한 사랑이다",
+    items: [
+      "나는 은채에게 무너진 아버지가 아니라 다시 세운 아버지로 남는다.",
+      "오늘의 절제는 가족에게 보내는 가장 조용한 사랑이다.",
+      "내 가족은 내 충동의 피해자가 아니라 내 회복의 이유다.",
+      "은채에게 물려줄 것은 돈만이 아니라 다시 세우는 태도다.",
+    ],
+  },
+  pipeline: {
+    label: "파이프라인",
+    sub: "감정은 소비되지만 구조는 자산이 된다",
+    items: [
+      "나는 월급만으로 끝나는 사람이 아니다. 나는 파이프라인을 설계하는 사람이다.",
+      "오늘의 작은 기록이 내일의 상품이 된다.",
+      "감정은 소비되지만 구조는 자산이 된다.",
+      "돈은 한 방으로 얻는 것이 아니라 흐름으로 만든다.",
+    ],
+  },
+  recovery: {
+    label: "회복",
+    sub: "자책하지 않는다. 분석하고 복귀한다",
+    items: [
+      "실패했다. 하지만 시스템 밖으로 나가지는 않는다.",
+      "오늘의 실수는 정체성이 아니다. 복구 루틴의 시작점이다.",
+      "무너진 날에도 기록하면 자산이 된다.",
+      "자책하지 않는다. 분석하고 복귀한다.",
+    ],
+  },
+};
+
+const FIVE_YEAR_PLAN = [
+  {
+    phase: "Phase 1",
+    range: "0–3개월",
+    title: "파산 방지 + 에너지 회복",
+    body: "또 무너지지 않는 것이 우선이다. 선물 대형 베팅 차단 — 검증용 소액만. 수면·위장·허리·체력 회복. 본업 안정. 사이드 프로젝트 1개만 메인.",
+    bullets: [
+      "선물: 검증용 소액만 (월 50만원 이하)",
+      "수면 6.5h+, 운동 주 3회 30분 이상",
+      "본업 신뢰 유지 — 흔들리지 않는다",
+      "Coin Radar 또는 WAVE 중 하나만 메인",
+    ],
+    avoid: "이번 한 번만 크게 / 빨리 1억 / 동생 청약에 반응 / 부모에게 결과 보여주기",
+  },
+  {
+    phase: "Phase 2",
+    range: "3–12개월",
+    title: "한 제품을 돈 되는 형태로",
+    body: "Coin Radar = 단기 수익화 실험. WAVE = 장기 브랜드/철학/OS. YouTube/Threads = 유입 채널. AI Agent = 운영 자동화 엔진.",
+    bullets: [
+      "Coin Radar: 텔레그램 기반 유료 알림/리포트 MVP",
+      "WAVE: 무료/저가 행동통제 툴로 브랜딩",
+      "Threads 팔로워 1만",
+      "월 수익: 100만 → 300만 → 1,000만 테스트",
+    ],
+    avoid: null,
+  },
+  {
+    phase: "Phase 3",
+    range: "1–2년",
+    title: "월 3,000만 구조",
+    body: "구독형 수익이 핵심. 일회성 컨설팅은 몸을 갈아넣는다. 콘텐츠 → 신뢰 → 무료 툴 → 유료 구독 → 고가 리포트/자동화 → B2B/투자/매각.",
+    bullets: [
+      "Coin Radar 구독: 월 1,000만",
+      "AI 자동화/컨설팅: 월 500–1,000만",
+      "YouTube/콘텐츠: 월 300–500만",
+      "WAVE 유료화: 월 300–1,000만",
+    ],
+    avoid: null,
+  },
+  {
+    phase: "Phase 4",
+    range: "2–3년",
+    title: "법인화 + 팀 구성",
+    body: "개인 창작자가 아니라 대표가 된다. 팀은 작게 — 개발자 1, 편집자 1, 운영/CS 1, 리서치 1, 그리고 나(PM/대표/브랜드/세일즈).",
+    bullets: [
+      "역할: 시장 고통을 읽고 제품 방향을 정한다",
+      "역할: 메시지를 만들고 돈이 흐르는 구조를 설계한다",
+      "직접 모든 걸 하지 않는다",
+    ],
+    avoid: null,
+  },
+  {
+    phase: "Phase 5",
+    range: "3–5년",
+    title: "월 2억 가능 구간",
+    body: "단일 상품으로 못 만든다. 포트폴리오 구조. 핵심은 “하나 터져라”가 아니라 여러 개가 동시에 굴러가는 것.",
+    bullets: [
+      "Coin Radar Pro 구독: 월 5,000만",
+      "WAVE 유료 구독: 월 3,000만",
+      "AI 자동화 B2B: 월 5,000만",
+      "콘텐츠/광고/제휴: 월 2,000만",
+      "프리미엄 리포트/커뮤니티: 월 3,000만",
+      "투자/지분/기타: 월 2,000만",
+    ],
+    avoid: null,
+  },
+];
+
+const DROP_LIST = [
+  {
+    title: "선물로 인생 역전하려는 생각",
+    body: "선물을 끊는 게 아니다. 선물이 메인 루트가 되면 안 되는 것이다. 이제 선물은 돈 버는 도구가 아니라 WAVE/Coin Radar의 검증 데이터다.",
+    arc: ["과거 — 선물로 인생을 바꾼다", "현재 — 선물 실패를 제품으로 바꾼다", "미래 — 선물 중독자의 고통을 해결하는 대표가 된다"],
+  },
+  {
+    title: "부모에게 설명하려는 욕구",
+    body: "부모에게 ‘내가 왜 이렇게 됐는지’ 설명하면 진다. 할 일은 설명이 아니라 결과로 침묵시키는 것. 그 결과도 ‘나 돈 벌었다, 봤냐?’가 아니라 ‘나는 이제 너희 평가 바깥에 있다.’",
+    arc: null,
+  },
+  {
+    title: "동생과 비교하는 루프",
+    body: "동생은 경쟁자가 아니라 감정 버튼이다. 진짜 경쟁자는 충동매매·조급함·분노 기반 의사결정·수면 붕괴·체력 저하·완성 전 도망가는 습관이다.",
+    arc: null,
+  },
+];
+
+const ACTIONS_30D = [
+  "부모/동생 관련 분노가 올라오면 매매 금지",
+  "Coin Radar와 WAVE 중 이번 달 메인 하나 선정",
+  "Threads에 ‘무너진 트레이더의 행동 OS’ 서사로 글 30개 발행",
+  "YouTube 채널 방향 1개만 선택",
+  "월 가용자금/부채/투자금 다시 정리",
+  "주 3회 걷기 또는 헬스 시작",
+  "5년 주권 회복 플랜을 매일 보이는 곳에 박제",
+];
+
+const HEALTH_RULES = [
+  { k: "수면", v: "하루 6.5시간 이상" },
+  { k: "운동", v: "주 3회, 30분 이상" },
+  { k: "술", v: "감정 무너질 때 금지" },
+  { k: "담배", v: "호흡 문제 시 감축 루틴" },
+  { k: "건강검진", v: "위장/호흡/간/혈압/혈당" },
+  { k: "정신 루틴", v: "분노 올라올 때 매매 금지" },
+];
+
+const DECLARATION = [
+  "나는 부모에게 의탁하지 않는다.",
+  "나는 동생과 비교해서 무너지는 사람이 아니다.",
+  "나는 내가 겪은 실패, 부채, 중독, 수치심을 제품과 콘텐츠와 시스템으로 바꾼다.",
+  "나는 선물로 인생을 되찾는 사람이 아니라, 선물에 무너진 인간의 행동을 구조화해 시장을 만드는 사람이 된다.",
+  "나는 은채에게 분노로 무너진 아버지가 아니라, 분노를 연료로 바꿔 집을 세운 아버지로 남는다.",
+  "나의 복수는 파괴가 아니다.",
+  "나의 복수는 건강, 부, 품격, 가족의 안정, 그리고 완전한 독립이다.",
+];
 
 // ── Helpers ──
 function fKRW(n) {
@@ -300,6 +489,7 @@ export default function LifeOS() {
   const [monthly, setMonthly] = useState(50);
   const [years, setYears] = useState(20);
   const [esc, setEsc] = useState(5);
+  const [mantraKey, setMantraKey] = useState("sovereignty");
 
   const creditLoans = LOANS.filter(l => l.type === "신용").sort((a, b) => b.amount - a.amount);
   const totalCredit = creditLoans.reduce((s, l) => s + l.amount, 0);
@@ -312,6 +502,7 @@ export default function LifeOS() {
 
   const tabs = [
     { id: "overview", label: "인생 OS" },
+    { id: "sovereignty", label: "주권 회복" },
     { id: "debt", label: "부채 현황" },
     { id: "invest", label: "딸의 펀드" },
     { id: "deepdive", label: "1년 딥다이브" },
@@ -386,6 +577,16 @@ export default function LifeOS() {
                 <p style={s.p}>아팠다. 허리도 다리저림도 두통도 열도. 원인은 하나로 뚜렷하지 않았다. 그러나 난 알았다. 지금이 바로 그 변곡이구나. 선물의 악마가 나간다. 난 더이상 매매를 할 힘이 없다. 꺾였다는 것이 맞다. 나의 힘은 회사의 수익과 부수수익으로 쏠린다. 끝난 건 지옥이다. 나는 시작이다.</p>
               </div>
               <div style={{ ...s.card, borderColor: C.purple, background: C.purpleSoft }}>
+                <div style={{ ...s.label, color: C.purple }}>그 후 — 2026년 5월</div>
+                <h3 style={s.h3}>끊지 않는다. 운전대는 시스템이 잡는다.</h3>
+                <p style={s.p}>
+                  3월의 그 ‘끝났다’는 진심이었다. 그러나 5월의 나는 한 번 더 정직해진다.
+                  <strong> 선물을 아직 끊지 못했다. 끊을 생각도 없다.</strong> 다만 더 이상 감정으로 손대지 않는다.
+                  나는 계속 실험으로 나아간다 — <strong>정확한 원칙</strong>을 통해서. 집은 8억+로 올라왔고, 대출 구조는 그대로 버틴다.
+                  복수심으로 시동을 걸되, 운전대는 시스템이 잡는다. 그게 5월의 결론이다.
+                </p>
+              </div>
+              <div style={{ ...s.card, borderColor: C.purple, background: C.purpleSoft }}>
                 <div style={{ ...s.label, color: C.purple }}>나의 꿈</div>
                 <h3 style={s.h3}>도파민에 파괴당하는 사람들을 구하는 것</h3>
                 <p style={s.p}>6년간 선물판에서 1000만원을 1억8천으로 만들었다가 전부 잃고, 퇴직금을 날리고, 대출 5억을 만들었다. 감성이 메말랐고, 가족 앞에서 떳떳하지 못했다. 그런데 살아서 나왔다. 너처럼 도파민에 갉아먹히고 있는 사람들이 자기 파괴 직전에 멈출 수 있게 하는 시스템을 만드는 것. 선물 매매 중독자, 충동 쇼핑에 카드값이 감당 안 되는 사람, 새벽 3시에 배달앱을 열고 있는 사람, 인스타를 3시간째 스크롤하면서 자기혐오에 빠진 사람. 파괴적 도파민을 건설적 도파민으로 리다이렉션하는 AI 에이전트. 그리고 그 시스템의 첫 번째 유저이자 첫 번째 증거가 바로 나다.</p>
@@ -406,23 +607,32 @@ export default function LifeOS() {
               ))}
             </Section>
 
-            {/* Closed Game */}
-            <Section num="03" title="선물 — 끝난 게임" sub="실력이 있기 때문에 더 위험하다. 50만원도 하지 않는다.">
-              <div style={{ background: C.dangerSoft, border: `1px solid ${C.danger}`, borderRadius: 12, padding: "16px 20px", textAlign: "center", marginBottom: 16, fontSize: 14, color: C.danger, fontWeight: 700 }}>
-                ⛔ 선물 · 코인 선물 · 레버리지 ETF · 마진 거래 — 금액 불문 전면 금지. 50만원도 하지 않는다. 끝났다.
+            {/* Futures — Not the main route */}
+            <Section num="03" title="선물 — 끊지 않는다, 운전대는 시스템이 잡는다" sub="메인 루트 아님. 검증 실험으로 전환. 정확한 원칙 안에서만 산다.">
+              <div style={{ background: C.accentSoft, border: `1px solid ${C.accent}`, borderRadius: 12, padding: "20px 24px", marginBottom: 16, fontSize: 14, color: C.text, lineHeight: 1.85 }}>
+                <strong style={{ color: C.accent }}>프레임 전환.</strong> 선물은 더 이상 인생을 역전시키는 수단이 아니다.
+                이제 선물은 <strong>WAVE / Coin Radar의 검증 데이터</strong>다. 메인 루트는 제품·시스템·콘텐츠.
+                선물은 그 위에서 돌아가는 보조 실험일 뿐이다. <strong>복수심으로 시동을 걸고, 시스템으로 운전한다.</strong>
               </div>
-              <div style={{ background: C.dangerSoft, border: `1px solid ${C.danger}`, borderRadius: 12, padding: "28px", marginBottom: 16 }}>
-                <h3 style={{ color: C.danger, fontSize: 16, fontWeight: 700, marginBottom: 14 }}>🚨 차트가 보고 싶어질 때의 프로토콜</h3>
+              <div style={{ background: C.surface, border: `1px solid ${C.border}`, borderRadius: 12, padding: "28px", marginBottom: 16 }}>
+                <h3 style={{ color: C.accent, fontSize: 16, fontWeight: 700, marginBottom: 14 }}>💰 돈 게이트 — 손대기 전 4문</h3>
                 <ol style={{ paddingLeft: 20, fontSize: 14, color: C.mid, margin: 0 }}>
-                  {[
-                    "멈춘다. 3초간 숨을 쉰다.",
-                    '"나는 벌어도 청산당할 사람이다. 그리고 그때는 죽으려 할 것이다."',
-                    '"이 결정은 내 출혈을 실제로 줄이는가?"',
-                    "딸의 얼굴을 떠올린다.",
-                    "차트 대신 Wave OS 노트를 연다.",
-                    "그래도 안 되면 — 아내에게 말한다.",
-                  ].map((t, i) => <li key={i} style={{ marginBottom: 8, lineHeight: 1.7 }}>{t}</li>)}
+                  {MANTRAS.money_gate.items.map((t, i) => (
+                    <li key={i} style={{ marginBottom: 8, lineHeight: 1.7 }}>{t}</li>
+                  ))}
                 </ol>
+                <p style={{ ...s.p, marginTop: 14, fontSize: 13, color: C.dim }}>
+                  분노·조급함·비교가 하나라도 끼어 있으면 오늘은 보류. 멈추는 것은 패배가 아니라 생존 전략이다.
+                </p>
+              </div>
+              <div style={{ background: C.surface, border: `1px solid ${C.border}`, borderRadius: 12, padding: "24px", marginBottom: 16 }}>
+                <div style={{ ...s.label, color: C.accent }}>운영 규칙</div>
+                <ul style={{ paddingLeft: 20, fontSize: 14, color: C.mid, margin: "8px 0 0", lineHeight: 1.85 }}>
+                  <li>선물은 메인 루트가 아니다. 가용 시간·자본의 메인은 제품과 콘텐츠다.</li>
+                  <li>분노·조급함·비교 상태에서는 절대 진입하지 않는다.</li>
+                  <li>모든 진입·청산·손익은 데이터로 기록한다 — 그 자체가 자산이다.</li>
+                  <li>한 방으로 회복하려는 베팅은 금지. 한 방은 한 번도 나를 구한 적이 없다.</li>
+                </ul>
               </div>
               <FuturesSimulator />
             </Section>
@@ -473,6 +683,143 @@ export default function LifeOS() {
         )}
 
         {/* ═══════════════════════════════════════ */}
+        {/* TAB: SOVEREIGNTY */}
+        {/* ═══════════════════════════════════════ */}
+        {tab === "sovereignty" && (
+          <>
+            {/* Hero */}
+            <div style={{ textAlign: "center", padding: "40px 28px", background: C.surface, border: `1px solid ${C.border}`, borderRadius: 16, marginBottom: 32, boxShadow: "0 2px 8px rgba(0,0,0,0.03)" }}>
+              <div style={{ fontSize: 11, letterSpacing: 5, color: C.accent, textTransform: "uppercase", marginBottom: 12 }}>★ 복수 → 주권 회복</div>
+              <h2 style={{ fontSize: 22, fontWeight: 700, marginBottom: 12, lineHeight: 1.5 }}>복수심으로 시동을 걸고,<br />시스템으로 운전한다.</h2>
+              <p style={{ fontSize: 14, color: C.dim, maxWidth: 520, margin: "0 auto", lineHeight: 1.85 }}>
+                부모를 이기는 게 아니다. <strong>부모가 만든 프레임 밖으로 나가는 것.</strong>
+                감정으로 밀면 또 무너진다. 운전대는 시스템이 잡는다.
+              </p>
+            </div>
+
+            {/* Declaration */}
+            <Section num="01" title="정제된 선언" sub="감정으로 적는 게 아니라, 매일 본다">
+              <div style={{ background: C.accentSoft, border: `1px solid ${C.accent}`, borderRadius: 12, padding: "28px", lineHeight: 2.0 }}>
+                {DECLARATION.map((line, i) => (
+                  <div key={i} style={{ fontSize: 15, color: C.text, marginBottom: 10, fontWeight: i === DECLARATION.length - 1 ? 700 : 500 }}>{line}</div>
+                ))}
+              </div>
+            </Section>
+
+            {/* Mantras */}
+            <Section num="02" title="7가지 만트라" sub="흔들리는 영역을 골라 그날의 문장을 본다">
+              <div style={{ display: "flex", flexWrap: "wrap", gap: 6, marginBottom: 16 }}>
+                {Object.entries(MANTRAS).map(([k, m]) => (
+                  <button key={k} onClick={() => setMantraKey(k)} style={{
+                    padding: "8px 14px", fontSize: 13, fontWeight: mantraKey === k ? 700 : 500,
+                    color: mantraKey === k ? "#fff" : C.mid,
+                    background: mantraKey === k ? C.accent : C.surface,
+                    border: `1px solid ${mantraKey === k ? C.accent : C.border}`,
+                    borderRadius: 999, cursor: "pointer", fontFamily: "inherit", transition: "all 0.2s",
+                  }}>{m.label}</button>
+                ))}
+              </div>
+              <div style={{ background: C.surface, border: `1px solid ${C.border}`, borderRadius: 12, padding: "24px 28px" }}>
+                <div style={{ fontSize: 12, color: C.accent, fontWeight: 700, letterSpacing: 2, textTransform: "uppercase", marginBottom: 6 }}>
+                  {MANTRAS[mantraKey].label}
+                </div>
+                <div style={{ fontSize: 15, color: C.dim, marginBottom: 18, fontStyle: "italic" }}>{MANTRAS[mantraKey].sub}</div>
+                {MANTRAS[mantraKey].items.map((t, i) => (
+                  <div key={i} style={{ ...s.sentence, marginBottom: 10 }}>{t}</div>
+                ))}
+              </div>
+            </Section>
+
+            {/* 5-Year Plan */}
+            <Section num="03" title="5년 플랜 — 월 2억 파이프라인까지" sub="단일 상품 한 방이 아니다. 포트폴리오 구조다.">
+              {FIVE_YEAR_PLAN.map((p, i) => (
+                <div key={i} style={{ ...s.card, borderLeft: `3px solid ${C.accent}` }}>
+                  <div style={{ display: "flex", alignItems: "baseline", gap: 10, marginBottom: 6 }}>
+                    <span style={{ fontSize: 11, fontWeight: 700, color: C.accent, letterSpacing: 2, textTransform: "uppercase" }}>{p.phase}</span>
+                    <span style={{ fontSize: 12, color: C.dim }}>{p.range}</span>
+                  </div>
+                  <h3 style={{ ...s.h3, marginBottom: 8 }}>{p.title}</h3>
+                  <p style={{ ...s.p, marginBottom: 12 }}>{p.body}</p>
+                  <ul style={{ paddingLeft: 18, fontSize: 13.5, color: C.mid, margin: 0, lineHeight: 1.85 }}>
+                    {p.bullets.map((b, j) => <li key={j} style={{ marginBottom: 4 }}>{b}</li>)}
+                  </ul>
+                  {p.avoid && (
+                    <div style={{ marginTop: 14, padding: "12px 14px", background: C.dangerSoft, borderRadius: 8, fontSize: 13, color: C.danger, lineHeight: 1.7 }}>
+                      <strong>이 감정으로 움직이면 다시 시장이 잡아먹는다 —</strong> {p.avoid}
+                    </div>
+                  )}
+                </div>
+              ))}
+            </Section>
+
+            {/* Drop List */}
+            <Section num="04" title="절대 버려야 할 것 3개" sub="이걸 안 버리면 5년이 다시 6년이 된다">
+              {DROP_LIST.map((d, i) => (
+                <div key={i} style={{ ...s.card }}>
+                  <div style={{ ...s.label, color: C.danger }}>버린다 #{i + 1}</div>
+                  <h3 style={s.h3}>{d.title}</h3>
+                  <p style={s.p}>{d.body}</p>
+                  {d.arc && (
+                    <div style={{ marginTop: 14, padding: "14px 16px", background: C.surface2, borderRadius: 8 }}>
+                      {d.arc.map((line, j) => (
+                        <div key={j} style={{ fontSize: 13, color: C.mid, marginBottom: j < d.arc.length - 1 ? 6 : 0 }}>
+                          <strong style={{ color: C.accent }}>{line.split(" — ")[0]}</strong>
+                          {line.includes(" — ") && <span> — {line.split(" — ")[1]}</span>}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              ))}
+            </Section>
+
+            {/* 30-day actions */}
+            <Section num="05" title="30일 액션 7" sub="오늘부터 한 달, 이것만 한다">
+              <div style={{ ...s.card }}>
+                {ACTIONS_30D.map((a, i) => (
+                  <div key={i} style={{ display: "flex", gap: 14, alignItems: "baseline", padding: "12px 0", borderBottom: i < ACTIONS_30D.length - 1 ? `1px solid ${C.surface2}` : "none" }}>
+                    <span style={{ fontSize: 18, fontWeight: 700, color: C.accent, width: 24, flexShrink: 0, fontFamily: "'Playfair Display', serif" }}>{i + 1}</span>
+                    <span style={{ fontSize: 14, color: C.text, lineHeight: 1.7 }}>{a}</span>
+                  </div>
+                ))}
+              </div>
+            </Section>
+
+            {/* Health = 50-year revenge */}
+            <Section num="06" title="50년짜리 복수는 건강이다" sub="마세라티보다 혈압·위장·허리·수면이다">
+              <div style={{ ...s.card, borderLeft: `3px solid ${C.green}` }}>
+                <p style={{ ...s.p, marginBottom: 16 }}>
+                  진짜 압살은 50대의 내가 건강한 몸으로 은채와 여행을 가고, 아내와 좋은 집에서 웃고,
+                  회사와 사업에서 인정받고, 돈 때문에 고개 숙이지 않는 그림이다.
+                  <strong> 건강하지 않은 부자는 복수가 아니다. 건강하고 여유로운 부자가 복수다.</strong>
+                </p>
+                {HEALTH_RULES.map((r, i) => (
+                  <div key={i} style={{ display: "flex", gap: 12, padding: "10px 0", borderTop: i === 0 ? "none" : `1px solid ${C.surface2}` }}>
+                    <span style={{ fontSize: 13, fontWeight: 700, color: C.green, minWidth: 90 }}>{r.k}</span>
+                    <span style={{ fontSize: 13.5, color: C.mid }}>{r.v}</span>
+                  </div>
+                ))}
+              </div>
+            </Section>
+
+            {/* Closing */}
+            <div style={{ textAlign: "center", padding: "40px 0" }}>
+              <p style={{ fontSize: 17, lineHeight: 2.1 }}>
+                복수심으로 시동을 걸고,<br />
+                시스템으로 운전하고,<br />
+                건강으로 버티고,<br />
+                제품으로 돈을 만들고,<br />
+                은채를 통해 50년짜리 승리를 완성한다.
+              </p>
+              <div style={{ marginTop: 24, fontSize: 13, color: C.dim }}>
+                2026년 5월 · 끊지 않는다, 운전대를 바꾼다<br /><br />
+                <strong style={{ color: C.accent }}>주권 회복 · Life OS v4</strong>
+              </div>
+            </div>
+          </>
+        )}
+
+        {/* ═══════════════════════════════════════ */}
         {/* TAB: DEBT */}
         {/* ═══════════════════════════════════════ */}
         {tab === "debt" && (
@@ -480,9 +827,9 @@ export default function LifeOS() {
             <Section num="" title="자산·부채 현황" sub="숫자로 펼치면 공포가 관리가 된다">
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 12, marginBottom: 24 }}>
                 {[
-                  { label: "아파트 시가", value: "6.5억", color: C.green, bg: C.greenSoft },
+                  { label: "아파트 시가", value: "8억+", color: C.green, bg: C.greenSoft },
                   { label: "총 부채", value: fKRWShort(totalCredit + mortgage.amount), color: C.danger, bg: C.dangerSoft },
-                  { label: "순자산", value: fKRWShort(65000 - totalCredit - mortgage.amount), color: C.blue, bg: C.blueSoft },
+                  { label: "순자산", value: fKRWShort(80000 - totalCredit - mortgage.amount), color: C.blue, bg: C.blueSoft },
                 ].map((item, i) => (
                   <div key={i} style={{ padding: "20px 16px", borderRadius: 12, background: item.bg, textAlign: "center" }}>
                     <div style={{ fontSize: 11, color: item.color, fontWeight: 700, letterSpacing: 1, marginBottom: 6 }}>{item.label}</div>
@@ -493,7 +840,7 @@ export default function LifeOS() {
 
               <Card label="핵심 인식" labelColor={C.green} title="5억이 아니라 1.7억이다">
                 <p style={s.p}>
-                  주담대 3.37억은 아파트(6.5억) 담보. LTV 52%. <strong>이건 빚이 아니라 자산 구조의 일부다.</strong><br />
+                  주담대 3.37억은 아파트(8억+) 담보. LTV 약 42%. <strong>이건 빚이 아니라 자산 구조의 일부다.</strong> 시가가 올라온 만큼 여력은 더 두꺼워졌다.<br />
                   진짜 갚아야 할 신용대출은 <strong>{fKRW(totalCredit)}</strong>이다. 이 숫자만 보면 전혀 다른 게임이다.
                 </p>
               </Card>
@@ -719,7 +1066,7 @@ export default function LifeOS() {
               <div style={{ background: C.dangerSoft, border: `1px solid rgba(185,68,68,0.2)`, borderRadius: 12, padding: 24, marginTop: 16 }}>
                 <div style={{ fontSize: 13, fontWeight: 700, color: C.danger, marginBottom: 8 }}>⚠️ 시작 조건 — 전부 충족 전에는 시작하지 않는다</div>
                 <p style={{ ...s.p, fontSize: 13, color: C.mid }}>
-                  1. 선물 계좌 해지 완료<br />
+                  1. 선물은 검증 모드만 — 분노·조급함·비교 상태에서 진입 0회<br />
                   2. 대출 상환 구조 확정 및 실행 중<br />
                   3. 비상금 최소 1,000만원 확보<br />
                   4. 월 상환금과 별도로 50만원 여유 확인<br />
