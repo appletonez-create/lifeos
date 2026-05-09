@@ -166,29 +166,41 @@ function simulate(monthly, rate, years, esc) {
   return { final: Math.round(bal / 10000), invested: Math.round(ti / 10000), data: yd };
 }
 
-// ── Styles ──
+// ── Design Tokens (Toss-style) ──
+// 가시성 최우선: 흰 베이스 + 진한 검정 위계 + 강조색 1포인트
 const C = {
-  bg: "#faf8f5", surface: "#fff", surface2: "#f5f2ed", border: "#ddd8d0",
-  text: "#1a1a1a", mid: "#3a3a3a", dim: "#5c5c5c", muted: "#8a8a8e",
-  accent: "#a0714a", accentSoft: "rgba(160,113,74,0.08)",
-  danger: "#b94444", dangerSoft: "rgba(185,68,68,0.07)",
-  green: "#3d7a50", greenSoft: "rgba(61,122,80,0.07)",
-  blue: "#3a6aab", blueSoft: "rgba(58,106,171,0.07)",
-  purple: "#7a5aab", purpleSoft: "rgba(122,90,171,0.07)",
+  bg: "#ffffff",
+  surface: "#ffffff",
+  surface2: "#f2f4f6",      // 옅은 회색 패널
+  border: "#e5e8eb",         // 옅은 보더
+  text: "#191f28",           // 1차 — 진한 검정
+  mid: "#4e5968",            // 2차 — 본문 회색
+  dim: "#8b95a1",            // 3차 — 보조
+  muted: "#b0b8c1",          // 4차 — 캡션
+  accent: "#3182f6",         // 토스 블루
+  accentSoft: "#e8f3ff",
+  danger: "#f04452",
+  dangerSoft: "#feeced",
+  green: "#00c471",
+  greenSoft: "#e6f9f1",
+  blue: "#3182f6",
+  blueSoft: "#e8f3ff",
+  purple: "#5b8def",         // accent 톤으로 통합 — 보라 폐기
+  purpleSoft: "#eaf1fe",
 };
 
 const s = {
-  page: { fontFamily: "'Noto Sans KR', -apple-system, sans-serif", background: C.bg, color: C.text, minHeight: "100vh", lineHeight: 1.8 },
-  container: { maxWidth: 700, margin: "0 auto", padding: "40px 20px 120px" },
-  card: { background: C.surface, border: `1px solid ${C.border}`, borderRadius: 12, padding: "24px", marginBottom: 16, boxShadow: "0 1px 3px rgba(0,0,0,0.04)" },
-  label: { fontSize: 11, letterSpacing: 3, textTransform: "uppercase", fontWeight: 700, marginBottom: 10 },
-  h3: { fontSize: 17, fontWeight: 700, marginBottom: 10, color: C.text },
-  p: { fontSize: 14, color: C.mid, lineHeight: 1.85, margin: 0 },
-  sectionNum: { fontSize: 11, letterSpacing: 4, color: C.accent, marginBottom: 6 },
-  sectionTitle: { fontSize: 22, fontWeight: 700, marginBottom: 6, letterSpacing: -0.5 },
-  sectionSub: { fontSize: 14, color: C.dim, marginBottom: 24 },
-  divider: { height: 1, background: C.border, margin: "48px 0" },
-  sentence: { padding: "20px 24px", background: C.surface, borderLeft: `3px solid ${C.accent}`, borderRadius: "0 8px 8px 0", marginBottom: 10, fontSize: 15, fontWeight: 500, color: C.text, lineHeight: 1.8 },
+  page: { fontFamily: "'Noto Sans KR', -apple-system, sans-serif", background: C.bg, color: C.text, minHeight: "100vh", lineHeight: 1.6, WebkitFontSmoothing: "antialiased" },
+  container: { maxWidth: 720, margin: "0 auto", padding: "32px 20px 120px" },
+  card: { background: C.surface, border: `1px solid ${C.border}`, borderRadius: 16, padding: 20, marginBottom: 12 },
+  label: { fontSize: 11, letterSpacing: 1.5, textTransform: "uppercase", fontWeight: 700, marginBottom: 8 },
+  h3: { fontSize: 18, fontWeight: 700, marginBottom: 8, color: C.text, letterSpacing: -0.3 },
+  p: { fontSize: 15, color: C.mid, lineHeight: 1.7, margin: 0 },
+  sectionNum: { fontSize: 11, letterSpacing: 2, color: C.accent, marginBottom: 6, fontWeight: 700 },
+  sectionTitle: { fontSize: 24, fontWeight: 800, marginBottom: 6, letterSpacing: -0.6, color: C.text },
+  sectionSub: { fontSize: 14, color: C.dim, marginBottom: 20 },
+  divider: { height: 1, background: C.border, margin: "40px 0" },
+  sentence: { padding: "16px 18px", background: C.surface2, borderRadius: 12, marginBottom: 8, fontSize: 15, fontWeight: 500, color: C.text, lineHeight: 1.65 },
 };
 
 // ── Components ──
@@ -422,14 +434,14 @@ export default function LifeOS() {
     <div style={s.page}>
       <div style={s.container}>
         {/* ── Header ── */}
-        <div style={{ textAlign: "center", marginBottom: 32 }}>
-          <div style={{ fontSize: 11, letterSpacing: 6, color: C.accent, textTransform: "uppercase", marginBottom: 8 }}>Life Operating System v4</div>
-          <h1 style={{ fontSize: 32, fontWeight: 700, margin: "0 0 8px", background: `linear-gradient(135deg, ${C.text}, ${C.accent})`, WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>내 인생의 운영체제</h1>
+        <div style={{ marginBottom: 24 }}>
+          <div style={{ fontSize: 11, letterSpacing: 1.5, color: C.accent, textTransform: "uppercase", marginBottom: 6, fontWeight: 700 }}>Life OS · v4</div>
+          <h1 style={{ fontSize: 30, fontWeight: 800, margin: "0 0 6px", color: C.text, letterSpacing: -0.8, lineHeight: 1.25 }}>내 인생의 운영체제</h1>
           <div style={{ fontSize: 13, color: C.dim }}>1988년생 · 39세 · 2026년 봄, 이곳에서 나왔다</div>
         </div>
 
         {/* ── Core Quote ── */}
-        <div style={{ padding: "28px", background: C.accentSoft, borderLeft: `3px solid ${C.accent}`, borderRadius: "0 10px 10px 0", marginBottom: 16, fontSize: 17, lineHeight: 2, color: C.text }}>
+        <div style={{ padding: 20, background: C.surface2, borderRadius: 14, marginBottom: 12, fontSize: 15.5, lineHeight: 1.75, color: C.text }}>
           난 감정을 오롯이 느끼고 그것에 오롯이 공감하고<br />
           만물을 사랑하고 취하기도 매혹적이기도<br />
           바람에 공기에 감사함을 느끼기도 하는<br />
@@ -438,20 +450,21 @@ export default function LifeOS() {
         </div>
 
         {/* ── Second Quote ── */}
-        <div style={{ padding: "28px", background: C.accentSoft, borderLeft: `3px solid ${C.accent}`, borderRadius: "0 10px 10px 0", marginBottom: 32, fontSize: 20, lineHeight: 2, color: C.text, fontWeight: 700 }}>
+        <div style={{ padding: 20, background: C.surface2, borderRadius: 14, marginBottom: 28, fontSize: 17, lineHeight: 1.75, color: C.text, fontWeight: 700 }}>
           작은 것들의 신.<br />
           작게 작게 하나씩 위닝해나간다.<br />
           그게 그냥 전부다.
         </div>
 
         {/* ── Tab Nav ── */}
-        <div style={{ display: "flex", gap: 4, marginBottom: 32, borderBottom: `1px solid ${C.border}`, overflowX: "auto", WebkitOverflowScrolling: "touch", paddingBottom: 0 }}>
+        <div style={{ display: "flex", gap: 6, marginBottom: 28, overflowX: "auto", WebkitOverflowScrolling: "touch", paddingBottom: 4, scrollbarWidth: "none" }}>
           {tabs.map(t => (
             <button key={t.id} onClick={() => setTab(t.id)} style={{
-              padding: "10px 16px", fontSize: 14, fontWeight: tab === t.id ? 700 : 400,
-              color: tab === t.id ? C.accent : C.dim, background: "none", border: "none",
-              borderBottom: tab === t.id ? `2px solid ${C.accent}` : "2px solid transparent",
-              cursor: "pointer", fontFamily: "inherit", transition: "all 0.2s", whiteSpace: "nowrap", flexShrink: 0,
+              padding: "10px 16px", fontSize: 14, fontWeight: 700,
+              color: tab === t.id ? "#fff" : C.mid,
+              background: tab === t.id ? C.text : C.surface2,
+              border: "none", borderRadius: 999,
+              cursor: "pointer", fontFamily: "inherit", whiteSpace: "nowrap", flexShrink: 0, minHeight: 38,
             }}>{t.label}</button>
           ))}
         </div>
@@ -462,11 +475,11 @@ export default function LifeOS() {
         {tab === "overview" && (
           <>
             {/* North Star */}
-            <div style={{ textAlign: "center", padding: "40px 28px", background: C.surface, border: `1px solid ${C.border}`, borderRadius: 16, marginBottom: 40, boxShadow: "0 2px 8px rgba(0,0,0,0.03)" }}>
-              <div style={{ fontSize: 11, letterSpacing: 5, color: C.accent, textTransform: "uppercase", marginBottom: 12 }}>★ 북극성 — 매일 쳐다보지 않는다. 방향만 확인한다</div>
-              <h2 style={{ fontSize: 22, fontWeight: 700, marginBottom: 12 }}>시간의 자유, 경제의 구속에서의 해방,<br />가족과 오롯이 함께하는 삶</h2>
-              <p style={{ fontSize: 14, color: C.dim, maxWidth: 500, margin: "0 auto 16px", lineHeight: 1.8 }}>나인원한남은 이 무형의 가치를 유형화한 상징이다. 매일 쳐다보면 현재가 초라해지고, "빠르게"를 찾게 되고, 그게 선물판이었다.</p>
-              <p style={{ fontSize: 14, color: C.mid, maxWidth: 520, margin: "0 auto", lineHeight: 1.9 }}>나의 꿈은 부자가 되는 것이 아니다. 인간이 자기 도파민을 컨트롤해서 자기주도적으로 살 수 있게 돕는 것이다. 그리고 그 과정에서 나 자신이 가장 충만하게 사는 것이다. 부는 그 결과로 따라오는 것이지 출발점이 아니다.</p>
+            <div style={{ padding: "28px 24px", background: C.surface2, borderRadius: 20, marginBottom: 32 }}>
+              <div style={{ fontSize: 11, letterSpacing: 1.5, color: C.accent, textTransform: "uppercase", marginBottom: 10, fontWeight: 700 }}>북극성 — 방향만 확인</div>
+              <h2 style={{ fontSize: 22, fontWeight: 800, marginBottom: 14, color: C.text, letterSpacing: -0.5, lineHeight: 1.4 }}>시간의 자유, 경제의 해방,<br />가족과 오롯이 함께하는 삶</h2>
+              <p style={{ fontSize: 14.5, color: C.mid, margin: "0 0 12px", lineHeight: 1.7 }}>매일 쳐다보면 현재가 초라해지고, "빠르게"를 찾게 되고, 그게 선물판이었다. 그래서 방향만 확인한다.</p>
+              <p style={{ fontSize: 14.5, color: C.mid, margin: 0, lineHeight: 1.7 }}>꿈은 부자가 되는 게 아니다. 인간이 자기 도파민을 컨트롤해서 자기주도적으로 살게 돕는 것. 그 과정에서 내가 가장 충만하게 사는 것. <strong style={{ color: C.text }}>부는 결과지 출발점이 아니다.</strong></p>
             </div>
 
             {/* Who Am I */}
@@ -480,22 +493,22 @@ export default function LifeOS() {
               <Card label="고유 자산" title="6년간 진짜 쌓은 것">
                 <p style={s.p}>돈은 다 날렸다. 하지만 인간 심리의 극한을 몸으로 아는 데이터는 안 날아갔다. 이 경험 + 토스 임원 직속. <strong>이 조합을 가진 사람은 드물다.</strong></p>
               </Card>
-              <div style={{ ...s.card, borderColor: C.accent, background: C.accentSoft }}>
-                <div style={{ ...s.label, color: C.accent }}>변곡점</div>
-                <h3 style={s.h3}>나의 세계가 끝났다 — 2026년 3월</h3>
-                <p style={s.p}>아팠다. 허리도 다리저림도 두통도 열도. 원인은 하나로 뚜렷하지 않았다. 그러나 난 알았다. 지금이 바로 그 변곡이구나. 선물의 악마가 나간다. 난 더이상 매매를 할 힘이 없다. 꺾였다는 것이 맞다. 나의 힘은 회사의 수익과 부수수익으로 쏠린다. 끝난 건 지옥이다. 나는 시작이다.</p>
+              <div style={{ ...s.card, background: C.surface2, border: "none" }}>
+                <div style={{ ...s.label, color: C.accent }}>변곡점 · 2026년 3월</div>
+                <h3 style={s.h3}>나의 세계가 끝났다</h3>
+                <p style={s.p}>아팠다. 허리도 다리저림도 두통도 열도. 원인은 하나로 뚜렷하지 않았다. 그러나 난 알았다. 지금이 바로 그 변곡이구나. 선물의 악마가 나간다. 난 더이상 매매를 할 힘이 없다. 꺾였다는 것이 맞다. 나의 힘은 회사의 수익과 부수수익으로 쏠린다. <strong style={{ color: C.text }}>끝난 건 지옥이다. 나는 시작이다.</strong></p>
               </div>
-              <div style={{ ...s.card, borderColor: C.purple, background: C.purpleSoft }}>
-                <div style={{ ...s.label, color: C.purple }}>그 후 — 2026년 5월</div>
+              <div style={{ ...s.card, background: C.surface2, border: "none" }}>
+                <div style={{ ...s.label, color: C.accent }}>그 후 · 2026년 5월</div>
                 <h3 style={s.h3}>끊지 않는다. 운전대를 바꾼다.</h3>
                 <p style={s.p}>
                   3월에 ‘끝났다’고 적었다. 진심이었다. 5월에 한 가지 더 정직해진다.
-                  <strong> 아직 안 끊었고, 끊을 생각도 없다.</strong> 다만 감정으로 손대지 않는다.
+                  <strong style={{ color: C.text }}> 아직 안 끊었고, 끊을 생각도 없다.</strong> 다만 감정으로 손대지 않는다.
                   실험은 계속한다 — 원칙 안에서만. 집은 8억+, 부채는 그대로. 메인은 제품·시스템.
                 </p>
               </div>
-              <div style={{ ...s.card, borderColor: C.purple, background: C.purpleSoft }}>
-                <div style={{ ...s.label, color: C.purple }}>나의 꿈</div>
+              <div style={{ ...s.card, background: C.surface2, border: "none" }}>
+                <div style={{ ...s.label, color: C.accent }}>나의 꿈</div>
                 <h3 style={s.h3}>도파민에 파괴당하는 사람들을 구하는 것</h3>
                 <p style={s.p}>6년간 선물판에서 1000만원을 1억8천으로 만들었다가 전부 잃고, 퇴직금을 날리고, 대출 5억을 만들었다. 감성이 메말랐고, 가족 앞에서 떳떳하지 못했다. 그런데 살아서 나왔다. 너처럼 도파민에 갉아먹히고 있는 사람들이 자기 파괴 직전에 멈출 수 있게 하는 시스템을 만드는 것. 선물 매매 중독자, 충동 쇼핑에 카드값이 감당 안 되는 사람, 새벽 3시에 배달앱을 열고 있는 사람, 인스타를 3시간째 스크롤하면서 자기혐오에 빠진 사람. 파괴적 도파민을 건설적 도파민으로 리다이렉션하는 AI 에이전트. 그리고 그 시스템의 첫 번째 유저이자 첫 번째 증거가 바로 나다.</p>
               </div>
@@ -593,173 +606,196 @@ export default function LifeOS() {
         {tab === "sovereignty" && (
           <>
             {/* Today header */}
-            <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", marginBottom: 14 }}>
-              <div style={{ fontSize: 11, letterSpacing: 3, color: C.accent, fontWeight: 700, textTransform: "uppercase" }}>오늘</div>
+            <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", marginBottom: 12 }}>
+              <div style={{ fontSize: 11, letterSpacing: 1.5, color: C.accent, fontWeight: 700, textTransform: "uppercase" }}>오늘 · 매일 30초</div>
               <div style={{ fontSize: 12, color: C.dim }}>{todayLabel || "—"}</div>
             </div>
 
-            {/* Today's one-line */}
-            <div style={{ background: C.surface, border: `1px solid ${C.border}`, borderRadius: 14, padding: "28px 26px", marginBottom: 12, boxShadow: "0 1px 3px rgba(0,0,0,0.03)" }}>
-              <div style={{ fontSize: 11, color: C.accent, fontWeight: 700, letterSpacing: 2, textTransform: "uppercase", marginBottom: 10 }}>
+            {/* Today's one-line — Hero */}
+            <div style={{ background: C.surface2, borderRadius: 20, padding: "32px 24px 28px", marginBottom: 14 }}>
+              <div style={{ fontSize: 11, color: C.accent, fontWeight: 700, letterSpacing: 1.5, textTransform: "uppercase", marginBottom: 14 }}>
                 {MANTRAS[mantraKey].label}
               </div>
-              <div style={{ fontSize: 22, fontWeight: 700, lineHeight: 1.5, color: C.text, marginBottom: 12 }}>
+              <div style={{ fontSize: 28, fontWeight: 800, lineHeight: 1.35, color: C.text, marginBottom: 14, letterSpacing: -0.6 }}>
                 {MANTRAS[mantraKey].one}
               </div>
-              <div style={{ fontSize: 13.5, color: C.dim, lineHeight: 1.8 }}>
+              <div style={{ fontSize: 14.5, color: C.mid, lineHeight: 1.7, fontWeight: 500 }}>
                 {MANTRAS[mantraKey].extra.join(" · ")}
               </div>
             </div>
 
             {/* Category chips */}
             <div style={{ display: "flex", flexWrap: "wrap", gap: 6, marginBottom: 28 }}>
-              {Object.entries(MANTRAS).map(([k, m]) => (
-                <button key={k} onClick={() => setMantraKey(k)} style={{
-                  padding: "6px 12px", fontSize: 12.5, fontWeight: mantraKey === k ? 700 : 500,
-                  color: mantraKey === k ? "#fff" : C.dim,
-                  background: mantraKey === k ? C.accent : "transparent",
-                  border: `1px solid ${mantraKey === k ? C.accent : C.border}`,
-                  borderRadius: 999, cursor: "pointer", fontFamily: "inherit",
-                }}>{m.label}{k === todayKey && mantraKey !== k ? " ·" : ""}</button>
-              ))}
+              {Object.entries(MANTRAS).map(([k, m]) => {
+                const active = mantraKey === k;
+                const isToday = k === todayKey;
+                return (
+                  <button key={k} onClick={() => setMantraKey(k)} style={{
+                    padding: "8px 14px", fontSize: 13, fontWeight: 700,
+                    color: active ? "#fff" : C.mid,
+                    background: active ? C.text : C.surface2,
+                    border: "none", borderRadius: 999, cursor: "pointer", fontFamily: "inherit",
+                    minHeight: 36, position: "relative",
+                  }}>
+                    {m.label}
+                    {isToday && !active && <span style={{ marginLeft: 6, color: C.accent }}>●</span>}
+                  </button>
+                );
+              })}
             </div>
 
             {/* Condition check */}
-            <div style={{ background: C.surface, border: `1px solid ${C.border}`, borderRadius: 12, padding: "20px 22px", marginBottom: 28 }}>
-              <div style={{ ...s.label, color: C.accent, marginBottom: 14 }}>오늘 컨디션</div>
+            <div style={{ marginBottom: 28 }}>
+              <div style={{ fontSize: 18, fontWeight: 800, color: C.text, marginBottom: 4, letterSpacing: -0.3 }}>오늘 컨디션</div>
+              <div style={{ fontSize: 13, color: C.dim, marginBottom: 14 }}>하나라도 켜지면 오늘은 보류한다</div>
               {[
                 { k: "anger", t: "분노가 올라와 있다" },
                 { k: "rush", t: "조급하다" },
                 { k: "compare", t: "누군가와 비교하고 있다" },
-              ].map(item => (
-                <label key={item.k} style={{ display: "flex", alignItems: "center", gap: 12, padding: "8px 0", cursor: "pointer" }}>
-                  <input
-                    type="checkbox"
-                    checked={check[item.k]}
-                    onChange={e => setCheck(c => ({ ...c, [item.k]: e.target.checked }))}
-                    style={{ width: 16, height: 16, accentColor: C.accent, cursor: "pointer" }}
-                  />
-                  <span style={{ fontSize: 14, color: C.mid }}>{item.t}</span>
-                </label>
-              ))}
+              ].map(item => {
+                const on = check[item.k];
+                return (
+                  <button
+                    key={item.k}
+                    onClick={() => setCheck(c => ({ ...c, [item.k]: !c[item.k] }))}
+                    style={{
+                      display: "flex", alignItems: "center", gap: 14, width: "100%", textAlign: "left",
+                      padding: "16px 18px", marginBottom: 8,
+                      background: on ? C.dangerSoft : C.surface2,
+                      border: "none", borderRadius: 14, cursor: "pointer", fontFamily: "inherit",
+                      minHeight: 56,
+                    }}
+                  >
+                    <span style={{
+                      display: "inline-flex", alignItems: "center", justifyContent: "center",
+                      width: 24, height: 24, borderRadius: 7,
+                      background: on ? C.danger : "#fff",
+                      border: on ? "none" : `1.5px solid ${C.muted}`,
+                      color: "#fff", fontSize: 14, fontWeight: 800, flexShrink: 0,
+                    }}>{on ? "✓" : ""}</span>
+                    <span style={{ fontSize: 15, color: on ? C.danger : C.text, fontWeight: on ? 700 : 500 }}>{item.t}</span>
+                  </button>
+                );
+              })}
               <div style={{
-                marginTop: 14, padding: "12px 14px", borderRadius: 8,
+                marginTop: 12, padding: "16px 18px", borderRadius: 14,
                 background: cleared ? C.greenSoft : C.dangerSoft,
                 color: cleared ? C.green : C.danger,
-                fontSize: 13.5, fontWeight: 700, textAlign: "center",
+                fontSize: 16, fontWeight: 800, textAlign: "center", letterSpacing: -0.3,
               }}>
                 {cleared ? "평온하다 — 진입 가능" : "보류한다 — 오늘은 쉰다"}
               </div>
             </div>
 
             {/* Today's action */}
-            <div style={{ marginBottom: 28 }}>
-              <div style={{ ...s.label, color: C.accent, marginBottom: 10 }}>오늘 한 가지</div>
-              <div style={{ background: C.surface, border: `1px solid ${C.border}`, borderRadius: 12, padding: "20px 22px", fontSize: 16, color: C.text, lineHeight: 1.6 }}>
+            <div style={{ marginBottom: 32 }}>
+              <div style={{ fontSize: 18, fontWeight: 800, color: C.text, marginBottom: 12, letterSpacing: -0.3 }}>오늘 한 가지</div>
+              <div style={{ background: C.accentSoft, borderRadius: 16, padding: "20px 22px", fontSize: 17, color: C.text, lineHeight: 1.5, fontWeight: 700 }}>
                 {ACTIONS_30D[actionIdx]}
               </div>
             </div>
 
+            {/* More — section title */}
+            <div style={{ fontSize: 13, fontWeight: 700, color: C.dim, marginBottom: 10, letterSpacing: 1, textTransform: "uppercase" }}>더 보기</div>
+
             {/* Expandable: 7 mantras full */}
-            <details style={{ marginBottom: 10, background: C.surface, border: `1px solid ${C.border}`, borderRadius: 10 }}>
-              <summary style={{ padding: "14px 18px", fontSize: 14, fontWeight: 600, color: C.text, cursor: "pointer", listStyle: "none" }}>
-                7개 카테고리 전부 보기
+            <details style={{ marginBottom: 8, background: C.surface2, borderRadius: 14 }}>
+              <summary style={{ padding: "16px 18px", fontSize: 15, fontWeight: 700, color: C.text, cursor: "pointer", listStyle: "none", display: "flex", justifyContent: "space-between", alignItems: "center", minHeight: 52 }}>
+                <span>7개 카테고리 전부</span><span style={{ color: C.muted, fontSize: 18 }}>＋</span>
               </summary>
-              <div style={{ padding: "0 18px 18px" }}>
+              <div style={{ padding: "0 18px 16px" }}>
                 {Object.entries(MANTRAS).map(([k, m]) => (
-                  <div key={k} style={{ padding: "12px 0", borderTop: `1px solid ${C.surface2}` }}>
-                    <div style={{ fontSize: 11, color: C.accent, fontWeight: 700, letterSpacing: 2, textTransform: "uppercase", marginBottom: 4 }}>{m.label}</div>
-                    <div style={{ fontSize: 14.5, color: C.text, fontWeight: 600, marginBottom: 4 }}>{m.one}</div>
-                    <div style={{ fontSize: 13, color: C.dim, lineHeight: 1.7 }}>{m.extra.join(" · ")}</div>
+                  <div key={k} style={{ padding: "14px 0", borderTop: `1px solid ${C.border}` }}>
+                    <div style={{ fontSize: 11, color: C.accent, fontWeight: 700, letterSpacing: 1.5, textTransform: "uppercase", marginBottom: 4 }}>{m.label}</div>
+                    <div style={{ fontSize: 15, color: C.text, fontWeight: 700, marginBottom: 4 }}>{m.one}</div>
+                    <div style={{ fontSize: 13, color: C.mid, lineHeight: 1.65 }}>{m.extra.join(" · ")}</div>
                   </div>
                 ))}
               </div>
             </details>
 
             {/* Expandable: 5-year plan */}
-            <details style={{ marginBottom: 10, background: C.surface, border: `1px solid ${C.border}`, borderRadius: 10 }}>
-              <summary style={{ padding: "14px 18px", fontSize: 14, fontWeight: 600, color: C.text, cursor: "pointer", listStyle: "none" }}>
-                5년 플랜 — 월 2억까지
+            <details style={{ marginBottom: 8, background: C.surface2, borderRadius: 14 }}>
+              <summary style={{ padding: "16px 18px", fontSize: 15, fontWeight: 700, color: C.text, cursor: "pointer", listStyle: "none", display: "flex", justifyContent: "space-between", alignItems: "center", minHeight: 52 }}>
+                <span>5년 플랜 — 월 2억까지</span><span style={{ color: C.muted, fontSize: 18 }}>＋</span>
               </summary>
-              <div style={{ padding: "0 18px 18px" }}>
+              <div style={{ padding: "0 18px 16px" }}>
                 {FIVE_YEAR_PLAN.map((p, i) => (
-                  <div key={i} style={{ padding: "14px 0", borderTop: `1px solid ${C.surface2}` }}>
-                    <div style={{ display: "flex", alignItems: "baseline", gap: 8, marginBottom: 6 }}>
-                      <span style={{ fontSize: 11, fontWeight: 700, color: C.accent, letterSpacing: 1.5 }}>{p.phase}</span>
+                  <div key={i} style={{ padding: "14px 0", borderTop: `1px solid ${C.border}` }}>
+                    <div style={{ display: "flex", alignItems: "baseline", gap: 8, marginBottom: 4 }}>
+                      <span style={{ fontSize: 11, fontWeight: 700, color: C.accent, letterSpacing: 1 }}>{p.phase}</span>
                       <span style={{ fontSize: 11, color: C.dim }}>{p.range}</span>
                     </div>
-                    <div style={{ fontSize: 14, fontWeight: 600, color: C.text, marginBottom: 6 }}>{p.title}</div>
-                    <div style={{ fontSize: 13, color: C.mid, lineHeight: 1.7 }}>
-                      {p.bullets.join(" · ")}
-                    </div>
+                    <div style={{ fontSize: 15, fontWeight: 700, color: C.text, marginBottom: 4 }}>{p.title}</div>
+                    <div style={{ fontSize: 13, color: C.mid, lineHeight: 1.65 }}>{p.bullets.join(" · ")}</div>
                   </div>
                 ))}
               </div>
             </details>
 
             {/* Expandable: drop list */}
-            <details style={{ marginBottom: 10, background: C.surface, border: `1px solid ${C.border}`, borderRadius: 10 }}>
-              <summary style={{ padding: "14px 18px", fontSize: 14, fontWeight: 600, color: C.text, cursor: "pointer", listStyle: "none" }}>
-                버려야 할 3개
+            <details style={{ marginBottom: 8, background: C.surface2, borderRadius: 14 }}>
+              <summary style={{ padding: "16px 18px", fontSize: 15, fontWeight: 700, color: C.text, cursor: "pointer", listStyle: "none", display: "flex", justifyContent: "space-between", alignItems: "center", minHeight: 52 }}>
+                <span>버려야 할 3개</span><span style={{ color: C.muted, fontSize: 18 }}>＋</span>
               </summary>
-              <div style={{ padding: "0 18px 18px" }}>
+              <div style={{ padding: "0 18px 16px" }}>
                 {DROP_LIST.map((d, i) => (
-                  <div key={i} style={{ padding: "12px 0", borderTop: `1px solid ${C.surface2}` }}>
-                    <div style={{ fontSize: 14, fontWeight: 600, color: C.text, marginBottom: 4 }}>{d.title}</div>
-                    <div style={{ fontSize: 13, color: C.mid, lineHeight: 1.7 }}>{d.body}</div>
+                  <div key={i} style={{ padding: "14px 0", borderTop: `1px solid ${C.border}` }}>
+                    <div style={{ fontSize: 15, fontWeight: 700, color: C.text, marginBottom: 4 }}>{d.title}</div>
+                    <div style={{ fontSize: 13.5, color: C.mid, lineHeight: 1.65 }}>{d.body}</div>
                   </div>
                 ))}
               </div>
             </details>
 
             {/* Expandable: 30-day actions */}
-            <details style={{ marginBottom: 10, background: C.surface, border: `1px solid ${C.border}`, borderRadius: 10 }}>
-              <summary style={{ padding: "14px 18px", fontSize: 14, fontWeight: 600, color: C.text, cursor: "pointer", listStyle: "none" }}>
-                30일 액션 7개
+            <details style={{ marginBottom: 8, background: C.surface2, borderRadius: 14 }}>
+              <summary style={{ padding: "16px 18px", fontSize: 15, fontWeight: 700, color: C.text, cursor: "pointer", listStyle: "none", display: "flex", justifyContent: "space-between", alignItems: "center", minHeight: 52 }}>
+                <span>30일 액션 7개</span><span style={{ color: C.muted, fontSize: 18 }}>＋</span>
               </summary>
-              <div style={{ padding: "0 18px 18px" }}>
+              <div style={{ padding: "0 18px 16px" }}>
                 {ACTIONS_30D.map((a, i) => (
-                  <div key={i} style={{ display: "flex", gap: 12, padding: "10px 0", borderTop: `1px solid ${C.surface2}`, alignItems: "baseline" }}>
-                    <span style={{ fontSize: 13, color: i === actionIdx ? C.accent : C.dim, fontWeight: 700, minWidth: 18 }}>{i + 1}</span>
-                    <span style={{ fontSize: 13.5, color: i === actionIdx ? C.text : C.mid }}>{a}</span>
+                  <div key={i} style={{ display: "flex", gap: 14, padding: "12px 0", borderTop: `1px solid ${C.border}`, alignItems: "baseline" }}>
+                    <span style={{ fontSize: 14, color: i === actionIdx ? C.accent : C.dim, fontWeight: 800, minWidth: 18 }}>{i + 1}</span>
+                    <span style={{ fontSize: 14, color: i === actionIdx ? C.text : C.mid, fontWeight: i === actionIdx ? 700 : 500 }}>{a}</span>
                   </div>
                 ))}
               </div>
             </details>
 
             {/* Expandable: health */}
-            <details style={{ marginBottom: 10, background: C.surface, border: `1px solid ${C.border}`, borderRadius: 10 }}>
-              <summary style={{ padding: "14px 18px", fontSize: 14, fontWeight: 600, color: C.text, cursor: "pointer", listStyle: "none" }}>
-                건강 — 50년짜리 베이스
+            <details style={{ marginBottom: 8, background: C.surface2, borderRadius: 14 }}>
+              <summary style={{ padding: "16px 18px", fontSize: 15, fontWeight: 700, color: C.text, cursor: "pointer", listStyle: "none", display: "flex", justifyContent: "space-between", alignItems: "center", minHeight: 52 }}>
+                <span>건강 — 50년짜리 베이스</span><span style={{ color: C.muted, fontSize: 18 }}>＋</span>
               </summary>
-              <div style={{ padding: "0 18px 18px" }}>
+              <div style={{ padding: "0 18px 16px" }}>
                 {HEALTH_RULES.map((r, i) => (
-                  <div key={i} style={{ display: "flex", gap: 12, padding: "10px 0", borderTop: `1px solid ${C.surface2}` }}>
-                    <span style={{ fontSize: 13, fontWeight: 700, color: C.green, minWidth: 64 }}>{r.k}</span>
-                    <span style={{ fontSize: 13.5, color: C.mid }}>{r.v}</span>
+                  <div key={i} style={{ display: "flex", gap: 14, padding: "12px 0", borderTop: `1px solid ${C.border}` }}>
+                    <span style={{ fontSize: 13, fontWeight: 700, color: C.green, minWidth: 56 }}>{r.k}</span>
+                    <span style={{ fontSize: 14, color: C.text, fontWeight: 500 }}>{r.v}</span>
                   </div>
                 ))}
               </div>
             </details>
 
             {/* Expandable: declaration */}
-            <details style={{ marginBottom: 32, background: C.surface, border: `1px solid ${C.border}`, borderRadius: 10 }}>
-              <summary style={{ padding: "14px 18px", fontSize: 14, fontWeight: 600, color: C.text, cursor: "pointer", listStyle: "none" }}>
-                선언 — 흔들릴 때만 펼친다
+            <details style={{ marginBottom: 28, background: C.surface2, borderRadius: 14 }}>
+              <summary style={{ padding: "16px 18px", fontSize: 15, fontWeight: 700, color: C.text, cursor: "pointer", listStyle: "none", display: "flex", justifyContent: "space-between", alignItems: "center", minHeight: 52 }}>
+                <span>선언 — 흔들릴 때만</span><span style={{ color: C.muted, fontSize: 18 }}>＋</span>
               </summary>
-              <div style={{ padding: "4px 22px 20px" }}>
+              <div style={{ padding: "4px 18px 18px" }}>
                 {DECLARATION.map((line, i) => (
                   <div key={i} style={{
-                    fontSize: 14, color: i === DECLARATION.length - 1 ? C.accent : C.text,
-                    fontWeight: i === DECLARATION.length - 1 ? 700 : 500,
-                    padding: "8px 0", lineHeight: 1.7,
+                    fontSize: 15, color: i === DECLARATION.length - 1 ? C.accent : C.text,
+                    fontWeight: i === DECLARATION.length - 1 ? 800 : 600,
+                    padding: "8px 0", lineHeight: 1.6,
                   }}>{line}</div>
                 ))}
               </div>
             </details>
 
-            <div style={{ textAlign: "center", fontSize: 11, color: C.muted, padding: "8px 0 24px" }}>
-              매일 아침 30초. 위에 세 줄만 본다.
+            <div style={{ textAlign: "center", fontSize: 11, color: C.muted, padding: "8px 0 24px", letterSpacing: 1 }}>
+              매일 아침 30초 — 위 세 칸만
             </div>
           </>
         )}
